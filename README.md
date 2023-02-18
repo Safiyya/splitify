@@ -36,3 +36,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## TODO
+
+- [x] Connect to spotify
+- [ ] (DEPLOY)
+- [ ] List all playlists
+- [ ] User can select playlist to split
+- [ ] (MILESTONE 1) : Display genres in playlist and split by it. Create new playlists that are tagged as Splitify playlist
+- [ ] (DEPLOY)
+- [ ] (MILESTONE 2) : Cluster genres to create bigger segments
+- [ ] (MILESTONE 3) : Ability to split on multiple playlist at the time
