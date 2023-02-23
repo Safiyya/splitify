@@ -31,19 +31,27 @@ export type SavedTracksData = {
   clusters: any;
 };
 
+export const SELECTED_AUDIO_FEATURES = [
+  "acousticness",
+  "danceability",
+  "energy",
+  "instrumentalness",
+  "key",
+  "liveness",
+  "loudness",
+  "mode",
+  "speechiness",
+  "tempo",
+  "time_signature",
+  "valence",
+  "duration_ms",
+] as const;
+
+// this is now the union we wanted, "name" | "age"
+type SelectableAudioFeatures = typeof SELECTED_AUDIO_FEATURES[number];
+
 export type AudioFeatures = {
   id: string;
-  acousticness: number;
-  danceability: number;
-  energy: number;
-  instrumentalness: number;
-  key: number;
-  liveness: number;
-  loudness: number;
-  mode: 0 | 1;
-  speechiness: number;
-  tempo: number;
-  time_signature: number;
-  valence: number;
-  duration_ms: number;
+} & {
+  [key in SelectableAudioFeatures]: number;
 };

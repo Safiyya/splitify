@@ -1,6 +1,6 @@
 import queryString from "query-string";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { STATE_KEY } from "./constants";
+import { STATE_KEY } from "../../../constants";
 const CLIENT_ID = process.env.CLIENT_ID;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 const SPOTIFY_SCOPES = process.env.SPOTIFY_SCOPES;

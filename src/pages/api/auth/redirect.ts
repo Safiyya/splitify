@@ -1,7 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import queryString from "query-string";
-import { STATE_KEY, ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "./constants";
+import {
+  STATE_KEY,
+  ACCESS_TOKEN_KEY,
+  REFRESH_TOKEN_KEY,
+} from "../../../constants";
 
 type Data = {
   isAuthenticated: boolean;

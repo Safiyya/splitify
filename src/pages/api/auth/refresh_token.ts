@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "./constants";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../../constants";
 
 type Data = {};
 
