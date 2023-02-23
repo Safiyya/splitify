@@ -16,7 +16,9 @@ export default async function handler(
   // TODO : Remove in prod
   res.setHeader("Cache-Control", "no-store");
 
-  const savedTracks = await service.User().savedTracks(req, LIKED_TRACKS_LIMIT);
+  const savedTracks = await service
+    .User()
+    .savedTracks(req, res, LIKED_TRACKS_LIMIT);
 
   if (savedTracks.status !== 200) {
     res.status(500).json({ error: savedTracks.error });
@@ -33,7 +35,9 @@ export default async function handler(
   const tracks: Track[] = [];
   let results = await Promise.allSettled(
     artistsIds.map(async (artistId) => {
-      const topTracks = await service.Artists().getTopTracks(req, artistId);
+      const topTracks = await service
+        .Artists()
+        .getTopTracks(req, res, artistId);
 
       tracks.push(...topTracks?.data?.tracks);
       topTracksByArtist.set(artistId, topTracks?.data?.tracks);
@@ -53,7 +57,9 @@ export default async function handler(
   let featuresByTrack: Map<string, AudioFeatures> = new Map();
   results = await Promise.allSettled(
     tracksIdsChunks.map(async (chunk) => {
-      const audioFeatures = await service.Tracks().audioFeatures(req, chunk);
+      const audioFeatures = await service
+        .Tracks()
+        .audioFeatures(req, res, chunk);
       audioFeatures.data.audio_features.forEach((feature) => {
         featuresByTrack.set(feature.id, feature);
       });

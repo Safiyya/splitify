@@ -1,5 +1,5 @@
 import { ACCESS_TOKEN_KEY } from "@/constants";
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export type ServiceErrorCodes =
   | 400
@@ -14,6 +14,7 @@ export type ServiceErrorCodes =
 
 const request = async <T>(
   req: NextApiRequest,
+  res: NextApiResponse,
   url: string,
   method: "GET" | "POST" | "PUT" | "DELETE" = "GET",
   body?: BodyInit

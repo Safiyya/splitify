@@ -4,6 +4,11 @@ export type Track = {
   album: Album;
   artists: Artist[];
   features: AudioFeatures;
+  images: {
+    url: string;
+    height: number;
+    width: number;
+  }[];
 };
 
 export type SavedTrack = {
@@ -28,7 +33,10 @@ export type SavedTracksData = {
   offset: number;
   total: number;
   items: SavedTrack[];
-  clusters: any;
+  clusters: {
+    index: number;
+    tracks: Track[];
+  }[];
 };
 
 export const SELECTED_AUDIO_FEATURES = [
