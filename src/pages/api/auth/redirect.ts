@@ -81,8 +81,8 @@ export default async function handler(
         const { access_token, refresh_token, expires_in } = body;
 
         res.setHeader("Set-Cookie", [
-          `${ACCESS_TOKEN_KEY}=${access_token}; HttpOnly; Max-Age=${expires_in};`,
-          `${REFRESH_TOKEN_KEY}=${refresh_token}; HttpOnly; Max-Age=${process.env.REFRESH_TOKEN_DURATION};`,
+          `${ACCESS_TOKEN_KEY}=${access_token}; HttpOnly; Max-Age=${expires_in};path=/;`,
+          `${REFRESH_TOKEN_KEY}=${refresh_token}; HttpOnly; Max-Age=${process.env.REFRESH_TOKEN_DURATION};path=/;`,
         ]);
 
         res.status(200).json({ isAuthenticated: true });

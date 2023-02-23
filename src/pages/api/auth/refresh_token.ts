@@ -1,6 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import queryString from "query-string";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "./constants";
 
 type Data = {};
@@ -42,11 +41,15 @@ export default async function handler(
 
     if (response.status === 200) {
       const body = await response.json();
-      var access_token = body.access_token;
+      var { access_token, expires_in } = body;
+
       res.setHeader("Set-Cookie", [
-        `${ACCESS_TOKEN_KEY}=${access_token}; HttpOnly; Max-Age=${60000 * 15};`,
+        `${ACCESS_TOKEN_KEY}=${access_token}; HttpOnly; Max-Age=${expires_in}; page=/;`,
+        `${REFRESH_TOKEN_KEY}=${refresh_token}; HttpOnly; Max-Age=${
+          60000 * 15
+        }; page=/;`,
       ]);
-      res.status(200).json({});
+      res.status(200).json({ access_token, refresh_token });
     } else {
       res.status(response.status).json({});
     }
