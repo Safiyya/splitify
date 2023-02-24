@@ -18,6 +18,7 @@ export type SavedTrack = {
 export type Album = {
   id: string;
   genres: string[];
+  release_date: string;
 };
 
 export type Artist = {
@@ -35,25 +36,26 @@ export type SavedTracksData = {
   total: number;
   items: SavedTrack[];
   clusters: {
+    error: number;
     index: number;
     tracks: Track[];
   }[];
 };
 
 export const SELECTED_AUDIO_FEATURES = [
-  "acousticness",
-  "danceability",
+  // "acousticness",
+  // "danceability",
   "energy",
   "instrumentalness",
-  "key",
-  "liveness",
-  "loudness",
-  "mode",
-  "speechiness",
+  // "key",
+  // "liveness",
+  // "loudness",
+  // "mode",
+  // "speechiness",
   "tempo",
-  "time_signature",
-  "valence",
-  "duration_ms",
+  // "time_signature",
+  // "valence",
+  // "duration_ms",
 ] as const;
 
 // this is now the union we wanted, "name" | "age"
