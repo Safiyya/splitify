@@ -10,7 +10,6 @@ export default async function handler(
 ) {
   const accessToken = req.cookies[ACCESS_TOKEN_KEY];
 
-  console.log(accessToken);
   const response = await fetch("https://api.spotify.com/v1/me", {
     headers: {
       Authorization: `Bearer ${accessToken}`,

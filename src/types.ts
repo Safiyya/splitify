@@ -9,6 +9,7 @@ export type Track = {
     height: number;
     width: number;
   }[];
+  genres: string[];
 };
 
 export type SavedTrack = {
@@ -46,13 +47,13 @@ export const SELECTED_AUDIO_FEATURES = [
   // "acousticness",
   // "danceability",
   "energy",
-  "instrumentalness",
+  // "instrumentalness",
   // "key",
   // "liveness",
   // "loudness",
   // "mode",
   // "speechiness",
-  "tempo",
+  // "tempo",
   // "time_signature",
   // "valence",
   // "duration_ms",

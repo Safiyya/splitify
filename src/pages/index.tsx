@@ -68,40 +68,45 @@ export default function Home() {
                         width="100%"
                         flexWrap="wrap"
                       >
-                        {cluster.tracks.map(({ id, name, artists, images }) => (
-                          <Card
-                            size="sm"
-                            key={id}
-                            direction={{ base: "column", sm: "row" }}
-                            overflow="hidden"
-                            variant="outline"
-                            mb={1}
-                            width="25%"
-                          >
-                            {images && (
-                              <Image
-                                maxW={{ base: "100%", sm: "200px" }}
-                                src={images[0].url}
-                                alt={name}
-                              />
-                            )}
+                        {cluster.tracks.map(
+                          ({ id, name, artists, images, genres }) => (
+                            <Card
+                              size="sm"
+                              key={id}
+                              direction={{ base: "column", sm: "row" }}
+                              overflow="hidden"
+                              variant="outline"
+                              mb={1}
+                              width="25%"
+                            >
+                              {images && (
+                                <Image
+                                  maxW={{ base: "100%", sm: "200px" }}
+                                  src={images[0].url}
+                                  alt={name}
+                                />
+                              )}
 
-                            <Stack>
-                              <CardBody>
-                                <Heading size="md">{name}</Heading>
-                                <Text py="2">
-                                  {artists.map((a) => a.name).join(" | ")}
-                                </Text>
-                              </CardBody>
+                              <Stack>
+                                <CardBody>
+                                  <Heading size="md">{name}</Heading>
+                                  <Text py="2">
+                                    {artists.map((a) => a.name).join(" | ")}
+                                  </Text>
+                                  <Text fontStyle="italic" py="2">
+                                    {genres.join(" | ")}
+                                  </Text>
+                                </CardBody>
 
-                              {/* <CardFooter>
+                                {/* <CardFooter>
                                 <Button variant="solid" colorScheme="green">
                                   Play
                                 </Button>
                               </CardFooter> */}
-                            </Stack>
-                          </Card>
-                        ))}
+                              </Stack>
+                            </Card>
+                          )
+                        )}
                       </Flex>
 
                       <Divider mt={2} />

@@ -16,7 +16,7 @@ export default async function handler(
     .User()
     .savedTracks(req, res, LIKED_TRACKS_LIMIT);
 
-  if (savedTracks.status !== 200) {
+  if (savedTracks.status !== 200 || !savedTracks.data) {
     res.status(500).json({ error: savedTracks.error });
     return;
   }

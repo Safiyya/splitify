@@ -39,7 +39,11 @@ const request = async <T>(
     },
   });
 
-  console.log(url, response.status, response.headers.get("Retry-After"));
+  console.log(
+    url.slice(0, 60),
+    response.status,
+    response.headers.get("Retry-After")
+  );
   const data = (await response.json()) as T;
 
   if (response.status !== 200) {

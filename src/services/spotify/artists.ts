@@ -7,14 +7,11 @@ export const getTopTracks = async (
   res: NextApiResponse,
   artistId: string
 ) => {
-  console.log("getTopTracks", artistId);
   const response = await request<{ tracks: Array<Track> }>(
     req,
     res,
     `/artists/${artistId}/top-tracks?market=GB`
   );
-
-  console.log(response.status);
 
   return response;
 };
