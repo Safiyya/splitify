@@ -1,5 +1,5 @@
-import service from "@/pages/services/spotify";
-import { cluster } from "@/pages/utils";
+import service from "@/services/spotify";
+import { cluster } from "@/utils";
 import { AudioFeatures, SavedTracksData, Track } from "@/types";
 import { chunk } from "lodash";
 import type { NextApiRequest, NextApiResponse } from "next";
