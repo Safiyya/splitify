@@ -17,6 +17,7 @@ export type SavedTrack = {
 
 export type Album = {
   id: string;
+  genres: string[];
 };
 
 export type Artist = {

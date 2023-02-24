@@ -1,9 +1,7 @@
 import service from "@/pages/services/spotify";
 import { cluster } from "@/pages/utils";
 import { AudioFeatures, SavedTracksData, Track } from "@/types";
-import { chunk, isEqual } from "lodash";
-import * as math from "mathjs";
-import { transpose } from "mathjs";
+import { chunk } from "lodash";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const LIKED_TRACKS_LIMIT = 50;
@@ -49,17 +47,19 @@ export default async function handler(
     return;
   }
 
-  const tracksIds = Array.from(topTracksByArtist.values())
+  const tracksIds = Array.from(savedTracks.data.items)
     .flat()
-    .map((track) => track.id);
+    .map((track) => track.track);
   const tracksIdsChunks = chunk(tracksIds, 50);
 
   let featuresByTrack: Map<string, AudioFeatures> = new Map();
   results = await Promise.allSettled(
     tracksIdsChunks.map(async (chunk) => {
-      const audioFeatures = await service
-        .Tracks()
-        .audioFeatures(req, res, chunk);
+      const audioFeatures = await service.Tracks().audioFeatures(
+        req,
+        res,
+        chunk.map((c) => c.id)
+      );
       audioFeatures.data.audio_features.forEach((feature) => {
         featuresByTrack.set(feature.id, feature);
       });
@@ -71,7 +71,12 @@ export default async function handler(
     return;
   }
 
-  const clusters = cluster(featuresByTrack, tracks);
+  const clusters = cluster(
+    featuresByTrack,
+    savedTracks.data.items.map((i) => i.track)
+  );
+  console.log({ tracks });
+  console.log({ clusters });
 
   const data = {
     ...savedTracks,

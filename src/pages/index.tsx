@@ -62,20 +62,24 @@ export default function Home() {
                         CLUSTER {i}
                       </Text>
 
-                      <Flex flexDirection="column">
+                      <Flex flexDirection="row" overflow="scroll">
                         {cluster.tracks.map(({ id, name, artists, images }) => (
                           <Card
+                            size="sm"
                             key={id}
                             direction={{ base: "column", sm: "row" }}
                             overflow="hidden"
                             variant="outline"
                             mb={1}
+                            mr={1}
                           >
-                            <Image
-                              maxW={{ base: "100%", sm: "200px" }}
-                              src={images[0].url}
-                              alt={name}
-                            />
+                            {images && (
+                              <Image
+                                maxW={{ base: "100%", sm: "200px" }}
+                                src={images[0].url}
+                                alt={name}
+                              />
+                            )}
 
                             <Stack>
                               <CardBody>
@@ -95,7 +99,7 @@ export default function Home() {
                         ))}
                       </Flex>
 
-                      <Divider />
+                      <Divider mt={2} />
                     </Box>
                   ))}
                 </>

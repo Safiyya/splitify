@@ -1,7 +1,7 @@
 import { AudioFeatures, SELECTED_AUDIO_FEATURES, Track } from "@/types";
 import { kmeans } from "kmeans-clust";
 import { isEqual, pick } from "lodash";
-import math from "mathjs";
+import * as math from "mathjs";
 
 const featuresArray = (f: AudioFeatures) => [
   ...Object.values(pick(f, ...SELECTED_AUDIO_FEATURES)),
