@@ -48,9 +48,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Container centerContent>
+        <Container centerContent maxWidth="80%">
           <Center width="100%" m={2}>
-            <Flex flexDirection="column">
+            <Flex flexDirection="column" width="100%">
               <Button onClick={showPlaylists}>Show clusters</Button>
 
               {clusters && (
@@ -59,10 +59,15 @@ export default function Home() {
                   {clusters.map((cluster, i) => (
                     <Box key={i} border={2} mb={4}>
                       <Text key={i} mb={4}>
-                        CLUSTER {i}
+                        CLUSTER {i} - {cluster.error}
                       </Text>
 
-                      <Flex flexDirection="row" overflow="scroll">
+                      <Flex
+                        flexDirection="row"
+                        overflow="scroll"
+                        width="100%"
+                        flexWrap="wrap"
+                      >
                         {cluster.tracks.map(({ id, name, artists, images }) => (
                           <Card
                             size="sm"
@@ -71,7 +76,7 @@ export default function Home() {
                             overflow="hidden"
                             variant="outline"
                             mb={1}
-                            mr={1}
+                            width="25%"
                           >
                             {images && (
                               <Image
@@ -89,11 +94,11 @@ export default function Home() {
                                 </Text>
                               </CardBody>
 
-                              <CardFooter>
+                              {/* <CardFooter>
                                 <Button variant="solid" colorScheme="green">
                                   Play
                                 </Button>
-                              </CardFooter>
+                              </CardFooter> */}
                             </Stack>
                           </Card>
                         ))}
