@@ -33,12 +33,6 @@ export default function Home() {
     setClusters(data.clusters);
   };
 
-  console.log({
-    tracks,
-    clusters,
-    realClusters: clusters?.filter((c) => c.tracks.length > 1),
-  });
-
   return (
     <>
       <Head>
@@ -55,11 +49,15 @@ export default function Home() {
 
               {clusters && (
                 <>
-                  <Heading> CLUSTERS</Heading>
+                  <Heading>
+                    {" "}
+                    CLUSTERING{" "}
+                    {clusters.reduce((pre, cur) => pre + cur.length, 0)} tracks
+                  </Heading>
                   {clusters.map((cluster, i) => (
                     <Box key={i} border={2} mb={4}>
                       <Text key={i} mb={4}>
-                        CLUSTER {i} - {cluster.error}
+                        CLUSTER {i} - {cluster.length} tracks
                       </Text>
 
                       <Flex
@@ -68,7 +66,7 @@ export default function Home() {
                         width="100%"
                         flexWrap="wrap"
                       >
-                        {cluster.tracks.map(
+                        {clusters[i].map(
                           ({ id, name, artists, images, genres }) => (
                             <Card
                               size="sm"

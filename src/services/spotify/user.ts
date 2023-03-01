@@ -18,7 +18,7 @@ export const getSavedTracks = async (
     const response = await request<{ items: Array<{ track: Track }> }>(
       req,
       res,
-      `/me/tracks?limit=50&offset=${offset}`
+      `/me/tracks?limit=${Math.min(limit, 50)}&offset=${offset}`
     );
 
     if (response.status === 200) {

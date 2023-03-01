@@ -1,10 +1,10 @@
 import service from "@/services/spotify";
-import { cluster } from "@/utils";
+import { clusterByFeatures, clusterTracksByGenre } from "@/utils";
 import { AudioFeatures, SavedTracksData } from "@/types";
 import { chunk } from "lodash";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-const LIKED_TRACKS_LIMIT = 200;
+const LIKED_TRACKS_LIMIT = 50;
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<SavedTracksData | { error: any }>
@@ -43,7 +43,22 @@ export default async function handler(
     return;
   }
 
-  const clusters = cluster(featuresByTrack, tracks);
+  const clusters = []; //clusterByFeatures(featuresByTrack, tracks);
+  const clustersGenres = clusterTracksByGenre(tracks);
+
+  //   console.log({
+  //     clustersGenres: clustersGenres.length,
+  //     output: clustersGenres.map((tracks, clusterIndex) =>
+  //       tracks
+  //         .map(
+  //           (t) =>
+  //             `${clusterIndex} >>> ${t?.name || ""} [${(t?.genres || []).join(
+  //               "|"
+  //             )}]`
+  //         )
+  //         .join("\r\n")
+  //     ),
+  //   });
 
   const data = {
     ...tracks,
@@ -55,7 +70,7 @@ export default async function handler(
         })),
       },
     })),
-    clusters,
+    clusters: clustersGenres,
     error: null,
   };
 

@@ -36,11 +36,12 @@ export type SavedTracksData = {
   offset: number;
   total: number;
   items: SavedTrack[];
-  clusters: {
-    error: number;
-    index: number;
-    tracks: Track[];
-  }[];
+  // clusters: {
+  //   error: number;
+  //   index: number;
+  //   tracks: Track[];
+  // }[];
+  clusters: Track[][];
 };
 
 export const SELECTED_AUDIO_FEATURES = [
