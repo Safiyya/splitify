@@ -1,138 +1,60 @@
-import { AudioFeatures, SELECTED_AUDIO_FEATURES, Track } from "@/types";
-import { kmeans } from "kmeans-clust";
-import { isEqual, pick } from "lodash";
-import * as math from "mathjs";
-import { index } from "mathjs";
-
-const featuresArray = (f: AudioFeatures, tracks: Track[]) => [
-  // Number.parseInt(
-  //   tracks.find((t) => t.id === f.id)?.album.release_date.slice(0, 3) || "0000"
-  // ),
-  ...Object.values(pick(f, ...SELECTED_AUDIO_FEATURES)),
-];
-
-const normalizeFeatures = (
-  featuresByTrack: Map<string, AudioFeatures>,
-  tracks: Track[]
-) => {
-  const features = Array.from(featuresByTrack.values()).map((x) =>
-    featuresArray(x, tracks)
-  );
-
-  const normalizedFeatures = [];
-
-  for (let i = 0; i < features[0].length; i++) {
-    const column = features.map((row: number[]) => row[i]);
-    const min = Math.min(...column);
-    const max = Math.max(...column);
-    const normalizedColumn = column.map((value) => (value - min) / (max - min));
-    normalizedFeatures.push(normalizedColumn);
-  }
-  return normalizedFeatures;
-};
-
-const clusterTracks = (features: number[][], numberOfClusters: number) => {
-  const transposed = math.transpose(math.matrix(features));
-  return kmeans(transposed.valueOf() as number[][], numberOfClusters);
-};
-
-const transpose = (array: number[][]) => {
-  return math.transpose(math.matrix(array)).valueOf();
-};
-
-// export const clusterByGenres = (tracks: Track[]) => {
-//   const genres = Array.from(new Set(tracks.map((t) => t.genres).flat()));
-//   console.log(genres);
-
-//   const matrix: number[][] = [];
-
-//   tracks.forEach((track, i) => {
-//     const indexesForTrack: number[] = [];
-//     console.log(i, track.name, track.genres);
-//     track.genres.forEach((trackGenre) => {
-//       const indexes = genres.reduce(function (a, genre, i) {
-//         if (genre === trackGenre) a.push(i);
-//         return a;
-//       }, [] as number[]);
-//       indexesForTrack.push(...indexes);
-//     });
-//     matrix[i] = Array.from(new Set(indexesForTrack));
-//   });
-
-//   console.log(matrix);
-// };
-
-export const clusterByFeatures = (
-  features: Map<string, AudioFeatures>,
-  tracks: Track[]
-) => {
-  const normalized = normalizeFeatures(features, tracks);
-
-  const clusters = clusterTracks(normalized, 20);
-
-  const transposed = transpose(normalized);
-
-  const tracksInClusters: Map<number, { error: number; tracksIds: string[] }> =
-    new Map();
-  clusters.forEach((cluster, clusterIndex) => {
-    cluster.points.forEach((point) => {
-      const index = transposed.findIndex((fa) => {
-        return isEqual(fa, point);
-      });
-      const track = Array.from(features.keys())[index];
-
-      tracksInClusters.set(clusterIndex, {
-        error: cluster.error,
-        tracksIds: [
-          ...(tracksInClusters.get(clusterIndex)?.tracksIds || []),
-          track,
-        ],
-      });
-    });
-  });
-
-  return Array.from(tracksInClusters.entries()).map(
-    ([index, { error, tracksIds }]) => ({
-      index,
-      error,
-      tracks: tracks.filter((track) => tracksIds.includes(track.id)),
-    })
-  );
-};
+import { countBy, fromPairs, orderBy, sortBy, toPairs, uniq } from "lodash";
+import { MIN_DISTANCE } from "./constants";
+import { Cluster, Track } from "./types";
 
 const genresKey = (genres: string[]) => genres.sort().join("|");
 
-export function clusterTracksByGenre(tracks: Track[]): Track[][] {
+const hashCode = function (str: string) {
+  var hash = 0,
+    i,
+    chr;
+  if (str.length === 0) return hash;
+  for (i = 0; i < str.length; i++) {
+    chr = str.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
+const distanceKey = (row: string, col: string) => {
+  return hashCode(row) + hashCode(col);
+};
+
+export function clusterTracksByGenre(tracks: Track[]): Cluster[] {
   const start = Date.now();
   console.log("# Start", Date.now() - start);
-  const trackGenres = tracks.map((track) => track.genres);
-  // const distances: number[][] = [];
-  const genresMap: Map<{ genresRow: string; genresColumn: string }, number> =
-    new Map();
+  const trackGenres = tracks.map((track) => track.genres.map((g) => g.trim()));
+  const distances: Map<number, number> = new Map();
 
   console.log("# Calculate distances", Date.now() - start);
 
   for (let i = 0; i < trackGenres.length; i++) {
-    // const row = [];
     for (let j = 0; j < trackGenres.length; j++) {
       const distance = 1 - jaccardDistance(trackGenres[i], trackGenres[j]);
-      // row.push(distance);
-      genresMap.set(
-        {
-          genresRow: genresKey(trackGenres[i]),
-          genresColumn: genresKey(trackGenres[j]),
-        },
+      distances.set(
+        distanceKey(genresKey(trackGenres[i]), genresKey(trackGenres[j])),
         distance
       );
     }
-    // distances.push(row);
   }
 
   console.log("# Calculate clusters", Date.now() - start);
-  const clusters = hierarchicalClustering(genresMap, tracks, 0.95);
+  const clusters = hierarchicalClustering(distances, tracks, MIN_DISTANCE);
 
   console.log("# Return clusters", Date.now() - start);
-  return clusters;
+  const augmentedClusters = clusters.map((cluster, index) => ({
+    name: `Cluster ${index}`,
+    genres: fromPairs(
+      sortBy(
+        toPairs(countBy(cluster.map((t) => t.genres).flat(), (x) => x)),
+        1
+      ).reverse()
+    ),
+    tracks: cluster,
+  }));
+
+  return orderBy(augmentedClusters, (c) => c.tracks.length, "desc");
 }
 
 function jaccardDistance(set1: string[], set2: string[]): number {
@@ -146,7 +68,7 @@ function jaccardDistance(set1: string[], set2: string[]): number {
 }
 
 function hierarchicalClustering(
-  genresMap: Map<{ genresRow: string; genresColumn: string }, number>,
+  distances: Map<number, number>,
   objects: Track[],
   thresholdDistance: number
 ): Track[][] {
@@ -157,7 +79,7 @@ function hierarchicalClustering(
     let closestClusters = [-1, -1];
     for (let i = 0; i < clusters.length; i++) {
       for (let j = i + 1; j < clusters.length; j++) {
-        const distance = clusterDistance(clusters[i], clusters[j], genresMap);
+        const distance = clusterDistance(clusters[i], clusters[j], distances);
         if (distance < minDistance) {
           minDistance = distance;
           closestClusters = [i, j];
@@ -179,23 +101,16 @@ function hierarchicalClustering(
 function clusterDistance(
   clusterA: Track[],
   clusterB: Track[],
-  genresMap: Map<{ genresRow: string; genresColumn: string }, number>
+  distances: Map<number, number>
 ): number {
   let sum = 0;
   clusterA.forEach((objA) => {
     clusterB.forEach((objB) => {
       const col = genresKey(objA.genres);
       const row = genresKey(objB.genres);
-      const found = Array.from(genresMap.entries()).find(
-        ([{ genresRow, genresColumn }, value]) =>
-          genresRow === row && genresColumn === col
-      )?.[1];
+      const key = distanceKey(row, col);
 
-      genresMap.get({
-        genresRow: row,
-        genresColumn: col,
-      });
-
+      const found = distances.get(key);
       sum += found || 0;
     });
   });

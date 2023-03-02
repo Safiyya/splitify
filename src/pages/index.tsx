@@ -1,35 +1,34 @@
 import Head from "next/head";
 import { Inter } from "@next/font/google";
-import styles from "@/styles/Home.module.css";
 import {
   Box,
   Button,
   Card,
   CardBody,
-  CardFooter,
   Center,
   Container,
-  Divider,
   Flex,
   Heading,
   Stack,
   Text,
   Image,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { Artist, SavedTrack, SavedTracksData } from "@/types";
-import { uniq } from "lodash";
+import { SavedTracksData } from "@/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [tracks, setTracks] = useState<any>();
   const [clusters, setClusters] = useState<SavedTracksData["clusters"]>();
 
   const showPlaylists = async () => {
     const response = await fetch("/api/tracks/saved");
     const data: SavedTracksData = await response.json();
-    setTracks(data.items);
     setClusters(data.clusters);
   };
 
@@ -49,65 +48,95 @@ export default function Home() {
 
               {clusters && (
                 <>
-                  <Heading>
-                    {" "}
-                    CLUSTERING{" "}
-                    {clusters.reduce((pre, cur) => pre + cur.length, 0)} tracks
-                  </Heading>
-                  {clusters.map((cluster, i) => (
-                    <Box key={i} border={2} mb={4}>
-                      <Text key={i} mb={4}>
-                        CLUSTER {i} - {cluster.length} tracks
+                  <Heading my={3}>
+                    {Object.entries(clusters.meta).map(([key, value]) => (
+                      <Text key={key}>
+                        {key}: {value}
                       </Text>
+                    ))}
+                  </Heading>
+                  {clusters.data.map(({ name, tracks, genres }, i) => (
+                    <Box key={i} border={2} mb={4}>
+                      <Accordion defaultIndex={[0]} allowMultiple>
+                        <AccordionItem>
+                          <AccordionButton flex={1}>
+                            <Flex flexDirection="column" flex="1">
+                              <Flex flex="1" alignItems="center">
+                                <Text fontSize="16px" textAlign="left" mr={3}>
+                                  <b>{name}</b>
+                                </Text>
+                                <Flex flexWrap="wrap">
+                                  {Object.entries(genres)
+                                    .slice(0, 5)
+                                    .map(([genre, total]) => (
+                                      <Text
+                                        key={genre}
+                                        py={2}
+                                        textAlign="left"
+                                        mr={1}
+                                      >
+                                        {genre}
+                                      </Text>
+                                    ))}
+                                </Flex>
+                              </Flex>
+                              <Text fontSize="11px" flex="1" textAlign="left">
+                                {tracks.length} tracks
+                              </Text>
+                            </Flex>
+                            <AccordionIcon />
+                          </AccordionButton>
 
-                      <Flex
-                        flexDirection="row"
-                        overflow="scroll"
-                        width="100%"
-                        flexWrap="wrap"
-                      >
-                        {clusters[i].map(
-                          ({ id, name, artists, images, genres }) => (
-                            <Card
-                              size="sm"
-                              key={id}
-                              direction={{ base: "column", sm: "row" }}
-                              overflow="hidden"
-                              variant="outline"
-                              mb={1}
-                              width="25%"
+                          <AccordionPanel pb={4}>
+                            <Flex
+                              flexDirection="row"
+                              overflow="scroll"
+                              width="100%"
+                              flexWrap="wrap"
                             >
-                              {images && (
-                                <Image
-                                  maxW={{ base: "100%", sm: "200px" }}
-                                  src={images[0].url}
-                                  alt={name}
-                                />
+                              {tracks.map(
+                                ({ id, name, artists, images, genres }) => (
+                                  <Card
+                                    size="sm"
+                                    key={id}
+                                    direction={{ base: "column", sm: "row" }}
+                                    overflow="hidden"
+                                    variant="outline"
+                                    mb={1}
+                                    width="25%"
+                                  >
+                                    {images && (
+                                      <Image
+                                        maxW={{ base: "100%", sm: "200px" }}
+                                        src={images[0].url}
+                                        alt={name}
+                                      />
+                                    )}
+
+                                    <Stack>
+                                      <CardBody>
+                                        <Heading size="md">{name}</Heading>
+                                        <Text py="1">
+                                          {artists
+                                            .map((a) => a.name)
+                                            .join(" | ")}
+                                        </Text>
+                                        <Text
+                                          fontSize="11px"
+                                          fontStyle="italic"
+                                          py="1"
+                                        >
+                                          {genres.join(" | ")}
+                                        </Text>
+                                      </CardBody>
+                                    </Stack>
+                                  </Card>
+                                )
                               )}
-
-                              <Stack>
-                                <CardBody>
-                                  <Heading size="md">{name}</Heading>
-                                  <Text py="2">
-                                    {artists.map((a) => a.name).join(" | ")}
-                                  </Text>
-                                  <Text fontStyle="italic" py="2">
-                                    {genres.join(" | ")}
-                                  </Text>
-                                </CardBody>
-
-                                {/* <CardFooter>
-                                <Button variant="solid" colorScheme="green">
-                                  Play
-                                </Button>
-                              </CardFooter> */}
-                              </Stack>
-                            </Card>
-                          )
-                        )}
-                      </Flex>
-
-                      <Divider mt={2} />
+                            </Flex>
+                          </AccordionPanel>
+                        </AccordionItem>
+                      </Accordion>
                     </Box>
                   ))}
                 </>

@@ -15,6 +15,7 @@ export const getSavedTracks = async (
   let offset = 0;
 
   while (offset <= limit) {
+    console.log({ offset, limit });
     const response = await request<{ items: Array<{ track: Track }> }>(
       req,
       res,

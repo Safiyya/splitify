@@ -30,18 +30,20 @@ export type Artist = {
   topTracks: Track[];
 };
 
+export type Cluster = {
+  name: string;
+  tracks: Track[];
+  genres: { [key: string]: number };
+  meta?: Record<string, string>;
+};
+
 export type SavedTracksData = {
   next: string;
   previous: string;
   offset: number;
   total: number;
   items: SavedTrack[];
-  // clusters: {
-  //   error: number;
-  //   index: number;
-  //   tracks: Track[];
-  // }[];
-  clusters: Track[][];
+  clusters: { data: Cluster[]; meta: Record<string, string> };
 };
 
 export const SELECTED_AUDIO_FEATURES = [

@@ -1,10 +1,10 @@
 import service from "@/services/spotify";
-import { clusterByFeatures, clusterTracksByGenre } from "@/utils";
+import { clusterTracksByGenre } from "@/utils";
 import { AudioFeatures, SavedTracksData } from "@/types";
 import { chunk } from "lodash";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { LIKED_TRACKS_LIMIT } from "@/constants";
 
-const LIKED_TRACKS_LIMIT = 50;
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<SavedTracksData | { error: any }>
@@ -26,39 +26,24 @@ export default async function handler(
   const tracksIds = tracks.map((track) => track.id);
   const tracksIdsChunks = chunk(tracksIds, 50);
 
-  let featuresByTrack: Map<string, AudioFeatures> = new Map();
-  const results = await Promise.allSettled(
-    tracksIdsChunks.map(async (chunk) => {
-      const audioFeatures = await service
-        .Tracks()
-        .audioFeatures(req, res, chunk);
-      audioFeatures.data.audio_features.forEach((feature) => {
-        featuresByTrack.set(feature.id, feature);
-      });
-    })
-  );
+  //   let featuresByTrack: Map<string, AudioFeatures> = new Map();
+  //   const results = await Promise.allSettled(
+  //     tracksIdsChunks.map(async (chunk) => {
+  //       const audioFeatures = await service
+  //         .Tracks()
+  //         .audioFeatures(req, res, chunk);
+  //       audioFeatures.data.audio_features.forEach((feature) => {
+  //         featuresByTrack.set(feature.id, feature);
+  //       });
+  //     })
+  //   );
 
-  if (results.find((r) => r.status === "rejected")) {
-    res.status(500).json({ error: "Cannot retrieve audio features" });
-    return;
-  }
+  //   if (results.find((r) => r.status === "rejected")) {
+  //     res.status(500).json({ error: "Cannot retrieve audio features" });
+  //     return;
+  //   }
 
-  const clusters = []; //clusterByFeatures(featuresByTrack, tracks);
-  const clustersGenres = clusterTracksByGenre(tracks);
-
-  //   console.log({
-  //     clustersGenres: clustersGenres.length,
-  //     output: clustersGenres.map((tracks, clusterIndex) =>
-  //       tracks
-  //         .map(
-  //           (t) =>
-  //             `${clusterIndex} >>> ${t?.name || ""} [${(t?.genres || []).join(
-  //               "|"
-  //             )}]`
-  //         )
-  //         .join("\r\n")
-  //     ),
-  //   });
+  const clusters = clusterTracksByGenre(tracks);
 
   const data = {
     ...tracks,
@@ -70,7 +55,18 @@ export default async function handler(
         })),
       },
     })),
-    clusters: clustersGenres,
+    clusters: {
+      data: clusters,
+      meta: {
+        "Total clusters": clusters.length,
+        "Total monoclusters": clusters.filter((c) => c.tracks.length === 1)
+          .length,
+        "% monoclusters":
+          (clusters.filter((c) => c.tracks.length === 1).length /
+            clusters.length) *
+          100,
+      },
+    },
     error: null,
   };
 
