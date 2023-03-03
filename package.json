@@ -29,6 +29,7 @@
     "machinelearn": "^2.1.5",
     "mathjs": "^11.5.1",
     "next": "13.1.6",
+    "next-auth": "^4.20.1",
     "node-kmeans": "^1.1.9",
     "npm": "^9.5.1",
     "query-string": "^8.1.0",

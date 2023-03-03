@@ -16,7 +16,6 @@ export default async function handler(
     },
   });
   const user = await response.json();
-  //   console.log(user);
 
   const { id: user_id } = user;
   const responseLikedTrackes = await fetch(
@@ -28,7 +27,6 @@ export default async function handler(
     }
   );
   const tracks = await responseLikedTrackes.json();
-  //   console.log(tracks);
 
   const responsePlaylists = await fetch(
     `https://api.spotify.com/v1/users/${user_id}/playlists`,
@@ -39,7 +37,6 @@ export default async function handler(
     }
   );
   const playlists = await responsePlaylists.json();
-  //   console.log(tracks);
 
   res.status(200).json({ user, playlists, tracks });
 }

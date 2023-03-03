@@ -1,5 +1,6 @@
 import { ACCESS_TOKEN_KEY } from "@/constants";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
 
 export type ServiceErrorCodes =
   | 400
@@ -25,12 +26,21 @@ const request = async <T>(
     }
   | {
       status: ServiceErrorCodes;
-      data: T;
+      data: T | null;
       error: string | Error;
     }
 > => {
-  const accessToken = req.cookies[ACCESS_TOKEN_KEY];
+  const session = await getSession({ req });
 
+  if (!session) {
+    return {
+      status: 401,
+      data: null,
+      error: "No session available",
+    };
+  }
+  // const accessToken = req.cookies[ACCESS_TOKEN_KEY];
+  const { accessToken } = session;
   const response = await fetch(`https://api.spotify.com/v1${url}`, {
     method,
     body,

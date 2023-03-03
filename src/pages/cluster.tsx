@@ -19,10 +19,15 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { SavedTracksData } from "@/types";
+import { useSession } from "next-auth/react";
+import AccessDenied from "@/components/access-denied";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Cluster() {
+  const { data: session } = useSession();
+  console.log({ session });
+
   const [clusters, setClusters] = useState<SavedTracksData["clusters"]>();
 
   const getClusters = async () => {
@@ -30,6 +35,11 @@ export default function Cluster() {
     const data: SavedTracksData = await response.json();
     setClusters(data.clusters);
   };
+
+  // If no session exists, display access denied message
+  if (!session) {
+    return <AccessDenied />;
+  }
 
   return (
     <>
