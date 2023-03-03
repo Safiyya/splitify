@@ -15,7 +15,6 @@ export const getSavedTracks = async (
   let offset = 0;
 
   while (offset <= limit) {
-    console.log({ offset, limit });
     const response = await request<{ items: Array<{ track: Track }> }>(
       req,
       res,
@@ -53,8 +52,10 @@ export const getSavedTracks = async (
         `/artists?ids=${chunk.join(",")}`
       );
 
-      const data = response.data.artists;
-      artists.push(...data);
+      if (response.status === 200) {
+        const data = response.data.artists;
+        artists.push(...data);
+      }
     })
   );
 
