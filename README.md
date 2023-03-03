@@ -37,13 +37,26 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
+## WIREFRAMES
+
+https://whimsical.com/splitify-7x6QM5DhyRhcnP6DKrEqA6
+
 ## TODO
 
 - [x] Connect to spotify
-- [ ] (DEPLOY)
-- [ ] List all playlists
-- [ ] User can select playlist to split
-- [ ] (MILESTONE 1) : Display genres in playlist and split by it. Create new playlists that are tagged as Splitify playlist
+- [x] (DEPLOY)
+- [x] User load all their songs saved songs at the time (pagination)
+- [x] Based on songs, create split by genres
+  - Splitting by related artists only without k-mean depends on list order => NOT GOOD
+  - Splitting by related artists using a k-mean =>
+  - Splitting by artist's top track metadata + release year => GOOD but need to improve distance function
+  - Splitting by genres => some stragglers but good start
+- [ ] For each relevant* (genre? cluster?) split, *stage a playlist\* (easily tagged and retrievable by API to not confuse with other playlist e.g. followed by Splitify)
+- [ ] (MILESTONE 1) On button click, show preview of playlist assignment
 - [ ] (DEPLOY)
 - [ ] (MILESTONE 2) : Cluster genres to create bigger segments
 - [ ] (MILESTONE 3) : Ability to split on multiple playlist at the time
+- [ ] (MILESTONE 4) : Login page
+- [ ] (MILESTONE 5) : UI and styling
+
+## SHOULD

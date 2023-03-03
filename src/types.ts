@@ -4,11 +4,7 @@ export type Track = {
   album: Album;
   artists: Artist[];
   features: AudioFeatures;
-  images: {
-    url: string;
-    height: number;
-    width: number;
-  }[];
+
   genres: string[];
 };
 
@@ -19,6 +15,11 @@ export type SavedTrack = {
 export type Album = {
   id: string;
   genres: string[];
+  images: {
+    url: string;
+    height: number;
+    width: number;
+  }[];
   release_date: string;
 };
 
