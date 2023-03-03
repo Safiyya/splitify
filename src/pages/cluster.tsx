@@ -19,11 +19,6 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { SavedTracksData } from "@/types";
-import dynamic from "next/dynamic";
-
-const DynamicGraph = dynamic(() => import("../components/graph"), {
-  ssr: false,
-});
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,9 +37,6 @@ export default function Cluster() {
         <Center width="100%" m={2}>
           <Flex flexDirection="column" width="100%">
             <Button onClick={getClusters}>Show clusters</Button>
-
-            {/* <DynamicGraph clusters={clusters?.data} /> */}
-
             {clusters && (
               <>
                 <Heading my={3}>
