@@ -62,6 +62,9 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
+  theme: {
+    colorScheme: "light",
+  },
   callbacks: {
     async redirect({ url, baseUrl }) {
       return baseUrl;

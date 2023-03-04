@@ -1,28 +1,9 @@
 import Head from "next/head";
 import { Inter } from "@next/font/google";
-import {
-  Box,
-  Button,
-  Card,
-  CardBody,
-  Center,
-  Container,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-  Image,
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { SavedTracksData } from "@/types";
+import { Center, Container } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
-import Cluster from "./cluster";
+import Login from "./auth/Login";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,8 +27,10 @@ export default function Home(props: AppProps) {
       </Head>
 
       <main>
-        <Container maxWidth="100%" background={"blackAlpha.100"}>
-          <Cluster />
+        <Container maxHeight="100%">
+          <Center>
+            <Login />
+          </Center>
         </Container>
       </main>
     </>
