@@ -20,7 +20,6 @@ import {
 import { useState } from "react";
 import { SavedTracksData } from "@/types";
 import { useSession } from "next-auth/react";
-import Home from "@/components/Home";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,11 +34,6 @@ export default function Cluster() {
     const data: SavedTracksData = await response.json();
     setClusters(data.clusters);
   };
-
-  // If no session exists, display access denied message
-  if (!session) {
-    return <Home />;
-  }
 
   return (
     <>
