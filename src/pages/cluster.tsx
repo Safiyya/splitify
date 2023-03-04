@@ -20,7 +20,7 @@ import {
 import { useState } from "react";
 import { SavedTracksData } from "@/types";
 import { useSession } from "next-auth/react";
-import AccessDenied from "@/components/access-denied";
+import Home from "@/components/Home";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,7 +38,7 @@ export default function Cluster() {
 
   // If no session exists, display access denied message
   if (!session) {
-    return <AccessDenied />;
+    return <Home />;
   }
 
   return (
@@ -63,7 +63,7 @@ export default function Cluster() {
                         <AccordionButton flex={1}>
                           <Flex flexDirection="column" flex="1">
                             <Flex flex="1" alignItems="center">
-                              <Text fontSize="16px" textAlign="left" mr={3}>
+                              <Text fontSize="1rem" textAlign="left" mr={3}>
                                 <b>{name}</b>
                               </Text>
                               <Flex flexWrap="wrap">
@@ -81,7 +81,7 @@ export default function Cluster() {
                                   ))}
                               </Flex>
                             </Flex>
-                            <Text fontSize="11px" flex="1" textAlign="left">
+                            <Text fontSize="0.75rem" flex="1" textAlign="left">
                               {tracks.length} tracks
                             </Text>
                           </Flex>
@@ -112,7 +112,7 @@ export default function Cluster() {
                                       {artists.map((a) => a.name).join(" | ")}
                                     </Text>
                                     <Text
-                                      fontSize="11px"
+                                      fontSize="0.75rem"
                                       fontStyle="italic"
                                       py="1"
                                     >

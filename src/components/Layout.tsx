@@ -29,7 +29,6 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
         flexDirection="row"
         justifyContent="space-between"
         width="100%"
-        height="30px"
         flex="1"
         my={2}
       >
