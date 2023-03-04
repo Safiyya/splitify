@@ -10,6 +10,7 @@ import {
 import { HamburgerIcon, StarIcon } from "@chakra-ui/icons";
 import { ReactNode } from "react";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 interface LayoutProps {
   children: ReactNode;
@@ -34,7 +35,9 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
       >
         <Flex alignItems="center">
           <StarIcon mr={1} />
-          <Heading size="lg">Splitify</Heading>
+          <Link href="/">
+            <Heading size="lg">Splitify</Heading>
+          </Link>
         </Flex>
         <Flex mr="0">
           <Menu>
