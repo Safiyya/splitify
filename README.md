@@ -41,6 +41,12 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 https://whimsical.com/splitify-7x6QM5DhyRhcnP6DKrEqA6
 
+## TECHNICAL
+
+- use React.Context to store context after load
+- Check that refresh token works
+- use rem instead of px
+
 ## TODO
 
 - [x] Connect to spotify
@@ -53,6 +59,7 @@ https://whimsical.com/splitify-7x6QM5DhyRhcnP6DKrEqA6
   - Splitting by genres => some stragglers but good start
 - [ ] For each relevant* (genre? cluster?) split, *stage a playlist\*
 - [ ] (MILESTONE 1) On button click, show preview of playlist assignment
+- [ ] Highlight stragglers
 - [ ] (DEPLOY)
 - [ ] (MILESTONE 4) : Login page
 - [ ] (MILESTONE 5) : UI and styling
