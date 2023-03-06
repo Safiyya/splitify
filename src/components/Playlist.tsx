@@ -1,7 +1,7 @@
 import { Cluster } from "@/types";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { Flex, Text, Button, FlexProps } from "@chakra-ui/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useGetPlaylistName } from "./hooks";
 import PlaylistTracks from "./PlaylistTracks";
 
@@ -19,6 +19,16 @@ const Playlist: React.FunctionComponent<PlaylistProps> = ({
   const onShowTracks = () => {
     setIsShowTracks(!isShowTracks);
   };
+
+  const onCreatePlaylist = useCallback(async () => {
+    await fetch("/api/playlists/create", {
+      method: "POST",
+      body: JSON.stringify({
+        name: playlistName,
+        tracksURIs: cluster.tracks.map((t) => t.uri).join(","),
+      }),
+    });
+  }, [playlistName, cluster]);
 
   return (
     <Flex alignItems="flex-start" {...props}>
@@ -46,6 +56,15 @@ const Playlist: React.FunctionComponent<PlaylistProps> = ({
         </Text>
         {isShowTracks && <PlaylistTracks cluster={cluster} />}
       </Flex>
+      <Button
+        onClick={onCreatePlaylist}
+        ml="auto"
+        height="3rem"
+        minWidth="3rem"
+        width="3rem"
+      >
+        <AddIcon />
+      </Button>
     </Flex>
   );
 };

@@ -1,4 +1,5 @@
 export type Track = {
+  uri: string;
   id: string;
   name: string;
   album: Album;
@@ -71,4 +72,10 @@ export type AudioFeatures = {
   id: string;
 } & {
   [key in SelectableAudioFeatures]: number;
+};
+
+export type Playlist = {
+  id: string;
+  name: string;
+  description: string;
 };

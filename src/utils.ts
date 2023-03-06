@@ -44,6 +44,7 @@ export function clusterTracksByGenre(tracks: Track[]): Cluster[] {
 
   console.log("# Return clusters", Date.now() - start);
   const augmentedClusters = clusters.map((cluster, index) => ({
+    index,
     name: `Cluster ${index}`,
     genres: fromPairs(
       sortBy(
