@@ -37,12 +37,11 @@ export default async function handler(
   const N = 5;
 
   const artistsIdsChunks = chunk(artistsIds, 20);
-  //   console.log({ chunks: artistsIdsChunks });
+
   let i = 0;
   let artists: Artist[] = [];
   let relatedArtists: Map<string, Artist[]> = new Map();
   while (i < artistsIdsChunks.length) {
-    //     console.log({ artistsIds, amout: artistsIds.length });
     const responseArtists = await fetch(
       `https://api.spotify.com/v1/artists?ids=${artistsIdsChunks[i].join(",")}`,
       {
@@ -71,19 +70,15 @@ export default async function handler(
     const artistsData: {
       artists: Artist[];
     } = await responseArtists.json();
-    // console.log({ artistsData });
     artists = [...artists, ...artistsData.artists];
     i++;
   }
-  //   console.log({ relatedArtists });
 
   const artistsWithRelated = artists.map((artist) => ({
     ...artist,
     genres: artists.find((a) => a.id === artist.id)?.genres,
     related: relatedArtists.get(artist.id),
   }));
-
-  //   console.log({ artistsWithRelated });
 
   function clusterArtists(artists: Artist[]) {
     const clusters: Array<Artist[]> = [];
@@ -112,11 +107,7 @@ export default async function handler(
               otherRelatedArtists || [],
               (x) => x.id
             );
-            console.log(
-              artist.name,
-              otherArtist.name,
-              commonArtists.map((x) => x.name)
-            );
+
             if ((commonArtists?.length || 0) > 0) {
               cluster.push(otherArtist, ...commonArtists);
             }

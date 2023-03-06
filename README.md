@@ -43,9 +43,10 @@ https://whimsical.com/splitify-7x6QM5DhyRhcnP6DKrEqA6
 
 ## TECHNICAL
 
-- use React.Context to store context after load
-- Check that refresh token works
-- use rem instead of px
+- [ ] use React.Context to store context after load
+- [ ] Check that refresh token works
+- [x] use rem instead of px
+- [ ] Theme should be similar to spotify
 
 ## TODO
 
@@ -57,10 +58,14 @@ https://whimsical.com/splitify-7x6QM5DhyRhcnP6DKrEqA6
   - Splitting by related artists using a k-mean =>
   - Splitting by artist's top track metadata + release year => GOOD but need to improve distance function
   - Splitting by genres => some stragglers but good start
-- [ ] For each relevant* (genre? cluster?) split, *stage a playlist\*
-- [ ] (MILESTONE 1) On button click, show preview of playlist assignment
+- [x] For each relevant\* (genre? cluster?) split,
+- [x] (MILESTONE 1) On button click, show preview of playlist assignment
+- [x] DEPLOY
+- [ ] Open list of tracks with preview-play (30 secs max)
 - [ ] Highlight stragglers
 - [ ] (DEPLOY)
+- [ ] Create playlist on demand
+- [ ] Unsave tracks in playlists (?)
 - [ ] (MILESTONE 4) : Login page
 - [ ] (MILESTONE 5) : UI and styling
 

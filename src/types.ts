@@ -14,6 +14,7 @@ export type SavedTrack = {
 
 export type Album = {
   id: string;
+  name: string;
   genres: string[];
   images: {
     url: string;

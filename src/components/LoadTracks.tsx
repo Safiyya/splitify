@@ -2,6 +2,7 @@ import { SavedTracksData } from "@/types";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { startCase } from "lodash";
 import { useEffect, useState } from "react";
+import Playlists from "./Playlists";
 
 interface LoadTracksProps {}
 
@@ -35,6 +36,7 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
   }, []);
 
   const loadTracks = async () => {
+    setClusters(undefined);
     const data = await getClusters();
     setClusters(data.clusters);
   };
@@ -43,33 +45,7 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
   return (
     <>
       <Button onClick={loadTracks}>Load {total} tracks</Button>
-      {clusters && (
-        <>
-          <Flex flexDirection="column" mt={4}>
-            {clusters.data.map((c) => (
-              <Box key={c.name} mb={2}>
-                <Flex flexWrap="wrap">
-                  {Object.entries(c.genres)
-                    .slice(0, 5)
-                    .map(([genre, total]) => (
-                      <Text
-                        fontWeight="bold"
-                        key={genre}
-                        textAlign="left"
-                        mr={1}
-                      >
-                        {startCase(genre)}
-                      </Text>
-                    ))}
-                </Flex>
-                <Text fontSize="0.75rem">
-                  Playlist | {c.tracks.length} tracks
-                </Text>
-              </Box>
-            ))}
-          </Flex>
-        </>
-      )}
+      {clusters?.data ? <Playlists clusters={clusters.data} /> : null}
     </>
   );
 };
