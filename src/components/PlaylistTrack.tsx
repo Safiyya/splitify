@@ -52,6 +52,7 @@ const PlaylistTrack: React.FunctionComponent<PlaylistTrackProps> = ({
         <Text fontSize="0.75rem">
           {track.artists.map((a) => a.name).join(" & ")} | {track.album.name}
         </Text>
+        <Text fontSize="0.75rem">{track.genres.join(" | ")}</Text>
       </Flex>
       <Menu>
         <MenuButton

@@ -1,3 +1,4 @@
+import { GRANT_TYPE_KEY, REFRESH_TOKEN_KEY } from "@/constants";
 import NextAuth, { AuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import SpotifyProvider from "next-auth/providers/spotify";
@@ -10,9 +11,9 @@ import SpotifyProvider from "next-auth/providers/spotify";
 async function refreshAccessToken(token: JWT) {
   try {
     const body = new URLSearchParams();
-    body.append("grant_type", "refresh_token");
-    body.append("refresh_token", token.refreshToken);
-    body.append("grant_type", "authorization_code");
+    body.append(GRANT_TYPE_KEY, REFRESH_TOKEN_KEY);
+    body.append(REFRESH_TOKEN_KEY, token.refreshToken);
+    body.append(GRANT_TYPE_KEY, "authorization_code");
 
     const response = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
@@ -50,7 +51,7 @@ async function refreshAccessToken(token: JWT) {
   }
 }
 
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
   providers: [
     SpotifyProvider({
       clientId: process.env.CLIENT_ID || "",
