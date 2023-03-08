@@ -1,4 +1,3 @@
-import { ACCESS_TOKEN_KEY } from "@/constants";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 

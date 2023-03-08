@@ -1,6 +1,5 @@
 import { Cluster } from "@/types";
-import { Flex, Box, Text, Heading } from "@chakra-ui/react";
-import { startCase } from "lodash";
+import { Flex, Text, Heading } from "@chakra-ui/react";
 import Playlist from "./Playlist";
 
 interface PlaylistsProps {

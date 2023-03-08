@@ -9,8 +9,6 @@ export default async function handler(
   const body = req.body;
   const { name, tracksURIs } = JSON.parse(body);
 
-  console.log(body, JSON.parse(body));
-
   const { data } = await service.Playlists().create(req, res, name, tracksURIs);
 
   if (!data) {

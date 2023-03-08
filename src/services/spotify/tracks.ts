@@ -1,4 +1,4 @@
-import { AudioFeatures, Track } from "@/types";
+import { AudioFeatures } from "@/types";
 import { NextApiRequest, NextApiResponse } from "next";
 import request from "./request";
 

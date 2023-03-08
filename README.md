@@ -71,6 +71,10 @@ https://whimsical.com/splitify-7x6QM5DhyRhcnP6DKrEqA6
 
 ## SHOULD
 
+- [ ] Break down `/saved` into
+  - [ ] Add tracks to context with `useInfiniteQueries` to go around 10s timeout
+  - [ ] Calculate clusters from context data
+- [ ] Progress bars
 - [ ] easily tagged playlist and retrievable by API to not confuse with other playlist e.g. followed by Splitify
 - [ ] Error management
 - [ ] Streaming https://beta.nextjs.org/docs/data-fetching/streaming-and-suspense

@@ -1,12 +1,9 @@
 import { Track } from "@/types";
 import {
-  AddIcon,
   ArrowForwardIcon,
   DeleteIcon,
   EditIcon,
-  ExternalLinkIcon,
   HamburgerIcon,
-  RepeatIcon,
 } from "@chakra-ui/icons";
 import {
   Flex,

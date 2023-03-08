@@ -1,12 +1,4 @@
-import {
-  countBy,
-  fromPairs,
-  orderBy,
-  pick,
-  sortBy,
-  toPairs,
-  uniq,
-} from "lodash";
+import { countBy, fromPairs, orderBy, pick, sortBy, toPairs } from "lodash";
 import { MIN_DISTANCE } from "./constants";
 import { Cluster, Track } from "./types";
 
