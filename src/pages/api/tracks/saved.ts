@@ -9,9 +9,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<SavedTracksData | { error: any }>
 ) {
-  // TODO : Remove in prod
-  // res.setHeader("Cache-Control", "no-store");
-
   const savedTracks = await service
     .User()
     .savedTracks(req, res, LIKED_TRACKS_LIMIT);
