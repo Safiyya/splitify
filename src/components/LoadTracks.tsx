@@ -45,6 +45,9 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
   return (
     <>
       <Button onClick={loadTracks}>Load {total} tracks</Button>
+      <Button variant="outline" onClick={loadTracks}>
+        Start again
+      </Button>
       {clusters?.data ? <Playlists clusters={clusters.data} /> : null}
     </>
   );
