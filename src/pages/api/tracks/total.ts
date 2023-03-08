@@ -7,9 +7,9 @@ import { LIKED_TRACKS_LIMIT } from "@/constants";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ total?: number } | { error: any }>
+  res: NextApiResponse<number | undefined | { error: any }>
 ) {
   const { data } = await service.User().totalSavedTracks(req, res);
 
-  res.status(200).json({ total: data?.total });
+  res.status(200).json(data?.total);
 }
