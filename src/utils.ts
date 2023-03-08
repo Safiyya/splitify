@@ -1,4 +1,12 @@
-import { countBy, fromPairs, orderBy, sortBy, toPairs, uniq } from "lodash";
+import {
+  countBy,
+  fromPairs,
+  orderBy,
+  pick,
+  sortBy,
+  toPairs,
+  uniq,
+} from "lodash";
 import { MIN_DISTANCE } from "./constants";
 import { Cluster, Track } from "./types";
 
@@ -52,7 +60,22 @@ export function clusterTracksByGenre(tracks: Track[]): Cluster[] {
         1
       ).reverse()
     ),
-    tracks: cluster,
+    tracks: cluster.map((track) => {
+      // return {
+      //   ...pick(track, ...Object.keys(cluster[0])),
+      //   album: pick(track.album, ...Object.keys(cluster[0].album)),
+      // } as Track;
+      return pick(
+        track,
+        "id",
+        "name",
+        "uri",
+        "genres",
+        "album.name",
+        "artists",
+        "artists.name"
+      ) as Track;
+    }),
   }));
 
   return orderBy(augmentedClusters, (c) => c.tracks.length, "desc");
@@ -75,25 +98,43 @@ function hierarchicalClustering(
 ): Track[][] {
   const clusters = objects.map((obj) => [obj]);
 
+  const memoizedDistances = new Array(clusters.length);
+  for (let i = 0; i < clusters.length; i++) {
+    memoizedDistances[i] = new Array(clusters.length);
+  }
+
   while (true) {
     let minDistance = Infinity;
     let closestClusters = [-1, -1];
+
     for (let i = 0; i < clusters.length; i++) {
       for (let j = i + 1; j < clusters.length; j++) {
-        const distance = clusterDistance(clusters[i], clusters[j], distances);
+        let distance = memoizedDistances[i][j];
+        if (distance === undefined) {
+          distance = clusterDistance(clusters[i], clusters[j], distances);
+          memoizedDistances[i][j] = distance;
+        }
         if (distance < minDistance) {
           minDistance = distance;
           closestClusters = [i, j];
         }
       }
     }
+
     if (minDistance >= thresholdDistance) {
       break;
     }
+
     clusters[closestClusters[0]] = clusters[closestClusters[0]].concat(
       clusters[closestClusters[1]]
     );
     clusters.splice(closestClusters[1], 1);
+
+    // Clear memoized distances for deleted cluster
+    memoizedDistances.splice(closestClusters[1], 1);
+    for (let i = 0; i < memoizedDistances.length; i++) {
+      memoizedDistances[i].splice(closestClusters[1], 1);
+    }
   }
 
   return clusters;

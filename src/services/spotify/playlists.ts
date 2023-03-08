@@ -18,6 +18,7 @@ export const createPlaylist = async (
     "POST",
     JSON.stringify({
       name: `SPLITIFY - ${name}`,
+      description: "Created by Splitify",
       public: false,
     })
   );

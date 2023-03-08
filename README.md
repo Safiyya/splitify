@@ -72,3 +72,5 @@ https://whimsical.com/splitify-7x6QM5DhyRhcnP6DKrEqA6
 ## SHOULD
 
 - [ ] easily tagged playlist and retrievable by API to not confuse with other playlist e.g. followed by Splitify
+- [ ] Error management
+- [ ] Streaming https://beta.nextjs.org/docs/data-fetching/streaming-and-suspense

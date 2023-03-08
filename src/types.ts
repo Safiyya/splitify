@@ -5,7 +5,6 @@ export type Track = {
   album: Album;
   artists: Artist[];
   features: AudioFeatures;
-
   genres: string[];
 };
 
