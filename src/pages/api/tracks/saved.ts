@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { LIKED_TRACKS_LIMIT } from "@/constants";
 import service from "@/services/spotify";
 import { SavedTracksData } from "@/types";
 import { clusterTracksByGenre } from "@/utils";
@@ -9,9 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<SavedTracksData | { error: any }>
 ) {
-  const savedTracks = await service
-    .User()
-    .savedTracks(req, res, LIKED_TRACKS_LIMIT);
+  const savedTracks = await service.User().savedTracks(req, res);
 
   if (savedTracks.status !== 200 || !savedTracks.data) {
     res.status(500).json({ error: savedTracks.error });

@@ -35,26 +35,28 @@ export const getTotalSavedTracks = async (
 
 export const getSavedTracks = async (
   req: NextApiRequest,
-  res: NextApiResponse,
-  limit: number
+  res: NextApiResponse
 ) => {
+  const PAGE_LIMIT = 50;
   const items: { track: Track }[] = [];
 
+  let pageLength = PAGE_LIMIT;
   let offset = 0;
 
-  while (offset <= limit) {
+  while (pageLength > 0) {
     const response = await request<{ items: Array<{ track: Track }> }>(
       req,
       res,
-      `/me/tracks?limit=${Math.min(limit, 50)}&offset=${offset}`
+      `/me/tracks?limit=${PAGE_LIMIT}&offset=${offset}`
     );
 
     if (response.status === 200) {
       items.push(...response.data.items);
+      pageLength = response.data.items.length;
     } else {
       return {
         status: response.status,
-        error: "Cannot retrieve saved tracks with offset " + offset.toString(),
+        error: "Cannot retrieve saved tracks from offset " + offset,
       };
       break;
     }
