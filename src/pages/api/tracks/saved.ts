@@ -26,18 +26,7 @@ export default async function handler(
   const clusters = clusterTracksByGenre(tracks);
 
   const data = {
-    clusters: {
-      data: clusters,
-      meta: {
-        "Total clusters": clusters.length,
-        "Total monoclusters": clusters.filter((c) => c.tracks.length === 1)
-          .length,
-        "% monoclusters":
-          (clusters.filter((c) => c.tracks.length === 1).length /
-            clusters.length) *
-          100,
-      },
-    },
+    clusters,
     error: null,
   };
 

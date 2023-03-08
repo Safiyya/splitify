@@ -44,8 +44,7 @@ export type SavedTracksData = {
   previous: string;
   offset: number;
   total: number;
-  items: SavedTrack[];
-  clusters: { data: Cluster[]; meta: Record<string, string> };
+  clusters: Cluster[];
 };
 
 export const SELECTED_AUDIO_FEATURES = [
