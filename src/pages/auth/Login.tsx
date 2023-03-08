@@ -1,6 +1,7 @@
-import React from "react";
-import { useSession, signIn } from "next-auth/react";
 import { Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { signIn,useSession } from "next-auth/react";
+import React from "react";
+
 import Layout from "@/components/Layout";
 import LoadTracks from "@/components/LoadTracks";
 

@@ -1,5 +1,7 @@
-import { Cluster } from "@/types";
 import { Flex, FlexProps, Heading, Text } from "@chakra-ui/react";
+
+import { Cluster } from "@/types";
+
 import { useGetPlaylistName } from "./hooks";
 import PlaylistTrack from "./PlaylistTrack";
 

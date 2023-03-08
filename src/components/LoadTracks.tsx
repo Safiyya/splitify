@@ -1,6 +1,8 @@
+import { Badge, Button } from "@chakra-ui/react";
+
 import { useGetClusters } from "@/services/api/clusters";
 import { useGetTotalTracks } from "@/services/api/tracks";
-import { Badge, Button } from "@chakra-ui/react";
+
 import Playlists from "./Playlists";
 
 interface LoadTracksProps {}

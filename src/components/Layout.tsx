@@ -1,3 +1,4 @@
+import { HamburgerIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Heading,
@@ -7,10 +8,9 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { HamburgerIcon, StarIcon } from "@chakra-ui/icons";
-import { ReactNode } from "react";
-import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
+import { ReactNode } from "react";
 
 interface LayoutProps {
   children: ReactNode;

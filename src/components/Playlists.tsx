@@ -1,5 +1,7 @@
+import { Flex, Heading,Text } from "@chakra-ui/react";
+
 import { Cluster } from "@/types";
-import { Flex, Text, Heading } from "@chakra-ui/react";
+
 import Playlist from "./Playlist";
 
 interface PlaylistsProps {

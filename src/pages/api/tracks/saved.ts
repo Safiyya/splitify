@@ -1,8 +1,9 @@
-import service from "@/services/spotify";
-import { clusterTracksByGenre } from "@/utils";
-import { SavedTracksData } from "@/types";
 import type { NextApiRequest, NextApiResponse } from "next";
+
 import { LIKED_TRACKS_LIMIT } from "@/constants";
+import service from "@/services/spotify";
+import { SavedTracksData } from "@/types";
+import { clusterTracksByGenre } from "@/utils";
 
 export default async function handler(
   req: NextApiRequest,

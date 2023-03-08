@@ -1,7 +1,9 @@
-import { Cluster } from "@/types";
 import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { Flex, Text, Button, FlexProps } from "@chakra-ui/react";
+import { Button, Flex, FlexProps,Text } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
+
+import { Cluster } from "@/types";
+
 import { useGetPlaylistName } from "./hooks";
 import PlaylistTracks from "./PlaylistTracks";
 

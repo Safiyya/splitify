@@ -1,5 +1,5 @@
-import { Session, User } from "next-auth";
-import { JWT } from "next-auth/jwt";
+/* eslint-disable unused-imports/no-unused-vars */
+import { User } from "next-auth";
 
 /** Example on how to extend the built-in session types */
 declare module "next-auth" {

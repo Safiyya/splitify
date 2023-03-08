@@ -1,6 +1,8 @@
-import { Artist, Track } from "@/types";
 import { chunk, compact, intersectionBy, uniq } from "lodash";
 import { NextApiRequest, NextApiResponse } from "next";
+
+import { Artist, Track } from "@/types";
+
 import request from "./request";
 
 const INCREMENT = 50;

@@ -1,6 +1,8 @@
-import { Playlist } from "@/types";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
+
+import { Playlist } from "@/types";
+
 import request from "./request";
 
 export const createPlaylist = async (

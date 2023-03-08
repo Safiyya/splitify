@@ -1,7 +1,8 @@
-import { GRANT_TYPE_KEY, REFRESH_TOKEN_KEY } from "@/constants";
 import NextAuth, { AuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import SpotifyProvider from "next-auth/providers/spotify";
+
+import { GRANT_TYPE_KEY, REFRESH_TOKEN_KEY } from "@/constants";
 
 /**
  * Takes a token, and returns a new token with updated
@@ -67,7 +68,7 @@ const authOptions: AuthOptions = {
     colorScheme: "light",
   },
   callbacks: {
-    async redirect({ url, baseUrl }) {
+    async redirect({ baseUrl }) {
       return baseUrl;
     },
     async jwt({ token, user, account }) {

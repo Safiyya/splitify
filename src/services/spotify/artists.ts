@@ -1,5 +1,7 @@
-import { Track } from "@/types";
 import { NextApiRequest, NextApiResponse } from "next";
+
+import { Track } from "@/types";
+
 import request from "./request";
 
 export const getTopTracks = async (

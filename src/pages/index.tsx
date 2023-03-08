@@ -1,22 +1,15 @@
-import Head from "next/head";
-import { Inter } from "@next/font/google";
 import { Center, Container } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
-import Login from "./auth/Login";
+import Head from "next/head";
 
-const inter = Inter({ subsets: ["latin"] });
+import Login from "./auth/Login";
 
 export type NextApplicationPage<P = any, IP = P> = NextPage<P, IP> & {
   requireAuth?: boolean;
 };
 
 export default function Home(props: AppProps) {
-  const {
-    Component,
-    pageProps,
-  }: { Component: NextApplicationPage; pageProps: any } = props;
-
   return (
     <>
       <Head>

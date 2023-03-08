@@ -69,7 +69,7 @@ type SelectableAudioFeatures = typeof SELECTED_AUDIO_FEATURES[number];
 export type AudioFeatures = {
   id: string;
 } & {
-  [key in SelectableAudioFeatures]: number;
+  [_key in SelectableAudioFeatures]: number;
 };
 
 export type Playlist = {

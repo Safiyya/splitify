@@ -1,4 +1,3 @@
-import { Track } from "@/types";
 import {
   ArrowForwardIcon,
   DeleteIcon,
@@ -6,15 +5,17 @@ import {
   HamburgerIcon,
 } from "@chakra-ui/icons";
 import {
-  Flex,
   Button,
-  Text,
+  Flex,
   IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Text,
 } from "@chakra-ui/react";
+
+import { Track } from "@/types";
 
 interface PlaylistTrackProps {
   track: Track;
