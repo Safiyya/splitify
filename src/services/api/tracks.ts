@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
-import TracksContext from "@/pages/TracksContext";
+import TracksContext from "@/TracksContext";
 import { Artist, RawTrack } from "@/types";
 
 const PAGE_LIMIT = 50;
