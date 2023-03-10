@@ -1,7 +1,7 @@
 import { compact, intersectionBy } from "lodash";
 import React, { ReactNode, useMemo, useState } from "react";
 
-import { Artist, RawTrack, Track } from "@/types";
+import { Artist, Cluster, RawTrack, Track } from "@/types";
 
 export type TracksContextType = {
   rawTracks: RawTrack[];
@@ -17,6 +17,11 @@ export type TracksContextType = {
   setArtists: React.Dispatch<React.SetStateAction<Artist[]>>;
 
   tracks: Track[];
+
+  clusters: Cluster[] | null;
+  setClusters: React.Dispatch<React.SetStateAction<Cluster[] | null>>;
+  isReady: boolean;
+  setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const TracksContext = React.createContext<TracksContextType>({
@@ -29,6 +34,10 @@ const TracksContext = React.createContext<TracksContextType>({
   artists: [],
   setArtists: () => {},
   tracks: [],
+  clusters: [],
+  setClusters: () => {},
+  isReady: false,
+  setIsReady: () => {},
 });
 
 export const TracksContextProvider: React.FC<{
@@ -38,6 +47,8 @@ export const TracksContextProvider: React.FC<{
   const [artists, setArtists] = useState<Artist[]>([]);
   const [isTracksReady, setIsTracksReady] = useState<boolean>(false);
   const [isArtistsReady, setIsArtistsReady] = useState<boolean>(false);
+  const [clusters, setClusters] = useState<Cluster[] | null>(null);
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   const tracks = useMemo(() => {
     if (!isTracksReady || !isArtistsReady) return [];
@@ -61,6 +72,10 @@ export const TracksContextProvider: React.FC<{
     isArtistsReady,
     setIsArtistsReady,
     tracks,
+    clusters,
+    setClusters,
+    isReady,
+    setIsReady,
   };
 
   return (

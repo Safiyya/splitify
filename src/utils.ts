@@ -1,7 +1,7 @@
 import { countBy, fromPairs, orderBy, pick, sortBy, toPairs } from "lodash";
 
 import { MIN_DISTANCE } from "./constants";
-import { Cluster, Track } from "./types";
+import { Track } from "./types";
 
 const genresKey = (genres: string[]) => genres.sort().join("|");
 
@@ -22,14 +22,12 @@ const distanceKey = (row: string, col: string) => {
   return hashCode(row) + hashCode(col);
 };
 
-export function clusterTracksByGenre(tracks: Track[]): Cluster[] {
-  const start = Date.now();
-  console.log("# Start", Date.now() - start);
-  const trackGenres = tracks.map((track) => track.genres.map((g) => g.trim()));
+export const getTrackGenres = (tracks: Track[]) => {
+  return tracks.map((track) => track.genres.map((g) => g.trim()));
+};
+
+export const getDistances = (trackGenres: string[][]) => {
   const distances: Map<number, number> = new Map();
-
-  console.log("# Calculate distances", Date.now() - start);
-
   for (let i = 0; i < trackGenres.length; i++) {
     for (let j = 0; j < trackGenres.length; j++) {
       const distance = 1 - jaccardDistance(trackGenres[i], trackGenres[j]);
@@ -39,11 +37,15 @@ export function clusterTracksByGenre(tracks: Track[]): Cluster[] {
       );
     }
   }
+  return distances;
+};
 
-  console.log("# Calculate clusters", Date.now() - start);
+export const getClusters = (
+  tracks: Track[],
+  distances: Map<number, number>
+) => {
   const clusters = hierarchicalClustering(distances, tracks, MIN_DISTANCE);
 
-  console.log("# Return clusters", Date.now() - start);
   const augmentedClusters = clusters.map((cluster, index) => ({
     index,
     name: `Cluster ${index}`,
@@ -54,10 +56,6 @@ export function clusterTracksByGenre(tracks: Track[]): Cluster[] {
       ).reverse()
     ),
     tracks: cluster.map((track) => {
-      // return {
-      //   ...pick(track, ...Object.keys(cluster[0])),
-      //   album: pick(track.album, ...Object.keys(cluster[0].album)),
-      // } as Track;
       return pick(
         track,
         "id",
@@ -72,7 +70,7 @@ export function clusterTracksByGenre(tracks: Track[]): Cluster[] {
   }));
 
   return orderBy(augmentedClusters, (c) => c.tracks.length, "desc");
-}
+};
 
 function jaccardDistance(set1: string[], set2: string[]): number {
   if (set1.length === 0 && set2.length === 0) {
