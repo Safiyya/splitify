@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { SavedTracksData, Track } from "@/types";
-import { clusterTracksByGenre } from "@/utils";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,12 +21,12 @@ export default async function handler(
   //   return;
   // }
 
-  const tracks = savedTracks.data.items.map((t) => t.track);
+  // const tracks = savedTracks.data.items.map((t) => t.track);
 
-  const clusters = clusterTracksByGenre(tracks);
+  // const clusters = clusterTracksByGenre(tracks);
 
   const data = {
-    clusters,
+    clusters: [],
     error: null,
   };
 
