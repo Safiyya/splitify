@@ -22,6 +22,8 @@ export type TracksContextType = {
   setClusters: React.Dispatch<React.SetStateAction<Cluster[] | null>>;
   isReady: boolean;
   setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
+
+  reset: () => void;
 };
 
 const TracksContext = React.createContext<TracksContextType>({
@@ -38,6 +40,7 @@ const TracksContext = React.createContext<TracksContextType>({
   setClusters: () => {},
   isReady: false,
   setIsReady: () => {},
+  reset: () => {},
 });
 
 export const TracksContextProvider: React.FC<{
@@ -62,6 +65,14 @@ export const TracksContextProvider: React.FC<{
     }));
   }, [isTracksReady, isArtistsReady, rawTracks, artists]);
 
+  const reset = () => {
+    setIsTracksReady(false);
+    setIsArtistsReady(false);
+    setRawTracks([]);
+    setArtists([]);
+    setClusters([]);
+  };
+
   const state = {
     rawTracks,
     setRawTracks,
@@ -76,6 +87,7 @@ export const TracksContextProvider: React.FC<{
     setClusters,
     isReady,
     setIsReady,
+    reset,
   };
 
   return (

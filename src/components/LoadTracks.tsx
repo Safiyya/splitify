@@ -14,8 +14,7 @@ import Playlists from "./Playlists";
 interface LoadTracksProps {}
 
 const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
-  const { tracks, clusters, isArtistsReady, isTracksReady } =
-    useContext(TracksContext);
+  const { clusters, reset } = useContext(TracksContext);
 
   const [loadTracksProgress, setLoadTracksProgress] = useState<number>();
   const [loadMetadataProgress, setLoadMetadataProgress] = useState<number>();
@@ -45,17 +44,27 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
     await getSavedTracks();
   };
 
+  const resetTracks = () => {
+    reset();
+    setLoadMetadataProgress(0);
+    setLoadTracksProgress(0);
+    setLoadClustersProgress(0);
+    onLoadClustersProgress(0);
+  };
+
   if (isLoadingTotalTracks) return null;
   if (errorTotalTracks) return <Badge>Error loading tracks</Badge>;
   return (
     <>
       <Button onClick={loadTracks}>Load {total} tracks</Button>
-      <Button variant="outline">Start again</Button>
-      Loading tracks {loadTracksProgress}
+      <Button variant="outline" onClick={resetTracks}>
+        Start again
+      </Button>
+      Loading tracks
       <Progress value={loadTracksProgress} />
-      Loading metadata {loadMetadataProgress}
+      Loading metadata
       <Progress value={loadMetadataProgress} />
-      Loading clusters {loadClustersProgress}
+      Loading clusters
       <Progress value={loadClustersProgress} />
       {clusters ? <Playlists clusters={clusters} /> : null}
     </>

@@ -154,25 +154,12 @@ export const useGetClusters = (onProgress: (progress: number) => void) => {
     isReady,
   } = useContext(TracksContext);
 
-  const [progress, setProgress] = useState(0);
-
-  const _onProgress = useCallback(
-    (progress: number) => {
-      setProgress(progress);
-    },
-    [setProgress]
-  );
-
-  useEffect(() => {
-    onProgress(progress);
-  }, [onProgress, progress]);
-
   const updateProgress = useCallback(
     async (progress: number) => {
       await new Promise((resolve) => setTimeout(resolve, 400));
-      _onProgress(progress);
+      onProgress(progress);
     },
-    [_onProgress]
+    [onProgress]
   );
 
   useEffect(() => {
