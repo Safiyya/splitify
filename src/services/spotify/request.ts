@@ -32,13 +32,14 @@ const request = async <T>(
   const session = await getSession({ req });
 
   if (!session) {
+    console.log("No session available");
     return {
       status: 401,
       data: null,
       error: "No session available",
     };
   }
-  // const accessToken = req.cookies[ACCESS_TOKEN_KEY];
+
   const { accessToken } = session;
   const response = await fetch(`https://api.spotify.com/v1${url}`, {
     method,

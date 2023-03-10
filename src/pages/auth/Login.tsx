@@ -1,5 +1,5 @@
 import { Button, Flex, Heading, Text } from "@chakra-ui/react";
-import { signIn,useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import React from "react";
 
 import Layout from "@/components/Layout";
@@ -7,7 +7,6 @@ import LoadTracks from "@/components/LoadTracks";
 
 export default function Login() {
   const { data: session } = useSession();
-
   if (session) {
     return (
       <>

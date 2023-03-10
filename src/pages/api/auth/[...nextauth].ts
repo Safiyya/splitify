@@ -79,13 +79,12 @@ const authOptions: AuthOptions = {
           user,
           accessToken: account.access_token,
           refreshToken: account.refresh_token,
-          accessTokenExpires: Date.now() + (account.expires_at || 0) * 1000,
+          accessTokenExpires: (account.expires_at || 0) * 1000,
         };
       }
 
       // Return previous token if the access token has not expired yet
       if (Date.now() < (token as any).accessTokenExpires) {
-        console.log("Access token still valid");
         return {
           user: token.user,
           accessToken: token.accessToken,

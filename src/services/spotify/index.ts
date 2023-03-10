@@ -1,12 +1,11 @@
 import { getTopTracks } from "./artists";
 import { createPlaylist } from "./playlists";
 import { getAudioFeatures } from "./tracks";
-import { getSavedTracks, getTotalSavedTracks } from "./user";
+import { getTotalSavedTracks } from "./user";
 
 export class SpotifyService {
   User = () => {
     return {
-      savedTracks: getSavedTracks,
       totalSavedTracks: getTotalSavedTracks,
     };
   };

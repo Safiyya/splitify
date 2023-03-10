@@ -1,10 +1,13 @@
-export type Track = {
+export type RawTrack = {
   uri: string;
   id: string;
   name: string;
   album: Album;
   artists: Artist[];
   features: AudioFeatures;
+};
+
+export type Track = RawTrack & {
   genres: string[];
 };
 
