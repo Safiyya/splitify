@@ -34,7 +34,6 @@ export const createPlaylist = async (
     };
   }
 
-  console.log({ tracksURIs });
   const { data } = await request<Playlist>(
     req,
     res,

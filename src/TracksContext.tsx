@@ -17,7 +17,6 @@ export type TracksContextType = {
   setArtists: React.Dispatch<React.SetStateAction<Artist[]>>;
 
   tracks: Track[];
-  //   setTracks: React.Dispatch<React.SetStateAction<Track[]>>;
 };
 
 const TracksContext = React.createContext<TracksContextType>({
@@ -30,7 +29,6 @@ const TracksContext = React.createContext<TracksContextType>({
   artists: [],
   setArtists: () => {},
   tracks: [],
-  //   setTracks: () => {},
 });
 
 export const TracksContextProvider: React.FC<{
@@ -52,8 +50,6 @@ export const TracksContextProvider: React.FC<{
       ),
     }));
   }, [isTracksReady, isArtistsReady, rawTracks, artists]);
-
-  console.log({ rawTracks, tracks, isTracksReady, isArtistsReady });
 
   const state = {
     rawTracks,
