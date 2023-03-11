@@ -11,14 +11,14 @@ import { getClusters, getDistances, getTrackGenres } from "@/utils";
 const PAGE_LIMIT = 50;
 
 export function useGetTotalTracks() {
-  return useQuery<number, Error>(
-    "totalTracks",
-    () => fetch("/api/tracks/total").then((res) => res.json()),
-    {
-      enabled: true,
-    }
-  );
-  // return { isLoading: false, error: null, data: 1000 };
+  // return useQuery<number, Error>(
+  //   "totalTracks",
+  //   () => fetch("/api/tracks/total").then((res) => res.json()),
+  //   {
+  //     enabled: true,
+  //   }
+  // );
+  return { isLoading: false, error: null, data: 100 };
 }
 
 const fetchTracks = async (session: Session, offset: number) => {
