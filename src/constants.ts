@@ -4,3 +4,4 @@ export const GRANT_TYPE_KEY = "grant_type";
 
 export const LIKED_TRACKS_LIMIT = 200;
 export const MIN_DISTANCE = 0.99;
+export const PAGE_LIMIT = 50;

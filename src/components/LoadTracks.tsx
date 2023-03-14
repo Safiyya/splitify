@@ -1,13 +1,13 @@
 import { Badge, Button } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 
+import { useGetTotalTracks } from "@/services/api/tracks";
 import {
   useGetClusterDistances,
   useGetClusters,
   useGetMetadata,
   useGetSavedTracks,
-  useGetTotalTracks,
-} from "@/services/api/tracks";
+} from "@/services/clustering";
 import TracksContext from "@/TracksContext";
 
 import Playlists from "./Playlists";
