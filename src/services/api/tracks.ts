@@ -144,6 +144,42 @@ export const useGetMetadata = (onProgress: (progress: number) => void) => {
   }, [setIsArtistsReady, index, artistsIdsChunks.length, artistsIdsChunks]);
 };
 
+export const useGetClusterDistances = (
+  onProgress: (progress: number) => void
+) => {
+  const {
+    tracks,
+    setDistances,
+    isTracksReady,
+    isArtistsReady,
+    setIsDistancesReady,
+  } = useContext(TracksContext);
+
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (isEmpty(tracks)) return;
+    if (!isTracksReady || !isArtistsReady) return;
+
+    const genres = getTrackGenres(tracks);
+    setProgress(50);
+    const distances = getDistances(genres);
+    setDistances(distances);
+    setIsDistancesReady(true);
+    setProgress(100);
+  }, [
+    tracks,
+    isArtistsReady,
+    isTracksReady,
+    setDistances,
+    setIsDistancesReady,
+  ]);
+
+  useEffect(() => {
+    onProgress(progress);
+  }, [progress, onProgress]);
+};
+
 export const useGetClusters = (onProgress: (progress: number) => void) => {
   const {
     tracks,
@@ -152,6 +188,8 @@ export const useGetClusters = (onProgress: (progress: number) => void) => {
     setClusters,
     setIsReady,
     isReady,
+    distances,
+    isDistancesReady,
   } = useContext(TracksContext);
 
   const onProgressRef = useRef(onProgress);
@@ -160,31 +198,22 @@ export const useGetClusters = (onProgress: (progress: number) => void) => {
     onProgressRef.current = onProgress;
   }, [onProgress]);
 
-  const updateProgress = useCallback(
-    async (progress: number) => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      console.log({ isReady, progress });
-      onProgressRef.current(progress);
-    },
-    [isReady]
-  );
+  const updateProgress = useCallback(async (progress: number) => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    onProgressRef.current(progress);
+  }, []);
 
   useEffect(() => {
     if (isEmpty(tracks)) return;
-    if (!isTracksReady || !isArtistsReady) return;
+    if (!isTracksReady || !isArtistsReady || !isDistancesReady) return;
     if (isReady) return;
 
     const calculateClusters = async () => {
-      const genres = getTrackGenres(tracks);
-      await updateProgress(33);
-      const distances = getDistances(genres);
-      await updateProgress(66);
-      const clusters = await getClusters(tracks, distances, updateProgress);
-      await updateProgress(100);
-      setClusters(clusters);
+      return getClusters(tracks, distances, updateProgress);
     };
 
-    calculateClusters().then(() => {
+    calculateClusters().then((clusters) => {
+      setClusters(clusters);
       setIsReady(true);
     });
   }, [
@@ -195,5 +224,7 @@ export const useGetClusters = (onProgress: (progress: number) => void) => {
     isReady,
     updateProgress,
     setIsReady,
+    distances,
+    isDistancesReady,
   ]);
 };

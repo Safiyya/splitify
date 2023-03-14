@@ -140,7 +140,6 @@ async function hierarchicalClustering(
 
     completedIterations++;
     const progress = (completedIterations / numIterations) * 100;
-    console.log("# progress", { progress });
     await onProgress(progress);
   }
 

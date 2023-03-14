@@ -2,6 +2,7 @@ import { Badge, Button, Progress } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 
 import {
+  useGetClusterDistances,
   useGetClusters,
   useGetMetadata,
   useGetSavedTracks,
@@ -19,6 +20,7 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
   const [loadTracksProgress, setLoadTracksProgress] = useState<number>();
   const [loadMetadataProgress, setLoadMetadataProgress] = useState<number>();
   const [loadClustersProgress, setLoadClustersProgress] = useState<number>();
+  const [loadDistancesProgress, setLoadDistancesProgress] = useState<number>();
 
   const onLoadTracksProgress = (progress: number) => {
     setLoadTracksProgress(progress);
@@ -29,10 +31,14 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
   const onLoadClustersProgress = (progress: number) => {
     setLoadClustersProgress(progress);
   };
+  const onLoadDistancesProgress = (progress: number) => {
+    setLoadDistancesProgress(progress);
+  };
 
   const getSavedTracks = useGetSavedTracks(onLoadTracksProgress);
   useGetMetadata(onLoadMetadataProgress);
   useGetClusters(onLoadClustersProgress);
+  useGetClusterDistances(onLoadDistancesProgress);
 
   const {
     isLoading: isLoadingTotalTracks,
@@ -46,10 +52,10 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
 
   const resetTracks = () => {
     reset();
-    setLoadMetadataProgress(0);
-    setLoadTracksProgress(0);
-    setLoadClustersProgress(0);
+    onLoadTracksProgress(0);
+    onLoadMetadataProgress(0);
     onLoadClustersProgress(0);
+    onLoadDistancesProgress(0);
   };
 
   if (isLoadingTotalTracks) return null;
@@ -64,6 +70,8 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
       <Progress value={loadTracksProgress} />
       Loading metadata
       <Progress value={loadMetadataProgress} />
+      Prepare
+      <Progress value={loadDistancesProgress} />
       Loading clusters
       <Progress value={loadClustersProgress} />
       {clusters ? <Playlists clusters={clusters} /> : null}

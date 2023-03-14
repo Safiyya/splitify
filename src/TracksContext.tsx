@@ -25,6 +25,8 @@ export type TracksContextType = {
 
   distances: Map<number, number>;
   setDistances: React.Dispatch<React.SetStateAction<Map<number, number>>>;
+  isDistancesReady: boolean;
+  setIsDistancesReady: React.Dispatch<React.SetStateAction<boolean>>;
 
   reset: () => void;
 };
@@ -46,6 +48,8 @@ const TracksContext = React.createContext<TracksContextType>({
   reset: () => {},
   distances: new Map(),
   setDistances: () => {},
+  isDistancesReady: false,
+  setIsDistancesReady: () => {},
 });
 
 export const TracksContextProvider: React.FC<{
@@ -58,6 +62,7 @@ export const TracksContextProvider: React.FC<{
   const [clusters, setClusters] = useState<Cluster[] | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
   const [distances, setDistances] = useState<Map<number, number>>(new Map());
+  const [isDistancesReady, setIsDistancesReady] = useState<boolean>(false);
 
   const tracks = useMemo(() => {
     if (!isTracksReady || !isArtistsReady) return [];
@@ -76,7 +81,7 @@ export const TracksContextProvider: React.FC<{
     setIsArtistsReady(false);
     setRawTracks([]);
     setArtists([]);
-    setClusters([]);
+    setClusters(null);
   };
 
   const state = {
@@ -96,6 +101,8 @@ export const TracksContextProvider: React.FC<{
     reset,
     distances,
     setDistances,
+    isDistancesReady,
+    setIsDistancesReady,
   };
 
   return (
