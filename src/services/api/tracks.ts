@@ -1,9 +1,10 @@
 import { chunk, compact, isEmpty, uniq } from "lodash";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
+import { useUpdateProgress } from "@/components/hooks";
 import TracksContext from "@/TracksContext";
 import { Artist, RawTrack } from "@/types";
 import { getClusters, getDistances, getTrackGenres } from "@/utils";
@@ -11,14 +12,14 @@ import { getClusters, getDistances, getTrackGenres } from "@/utils";
 const PAGE_LIMIT = 50;
 
 export function useGetTotalTracks() {
-  return useQuery<number, Error>(
-    "totalTracks",
-    () => fetch("/api/tracks/total").then((res) => res.json()),
-    {
-      enabled: true,
-    }
-  );
-  // return { isLoading: false, error: null, data: 100 };
+  // return useQuery<number, Error>(
+  //   "totalTracks",
+  //   () => fetch("/api/tracks/total").then((res) => res.json()),
+  //   {
+  //     enabled: true,
+  //   }
+  // );
+  return { isLoading: false, error: null, data: 500 };
 }
 
 const fetchTracks = async (session: Session, offset: number) => {
@@ -76,6 +77,8 @@ export function useGetSavedTracks(onProgress: (progress: number) => void) {
     throw Error("No session available");
   }
 
+  const updateProgress = useUpdateProgress(onProgress);
+
   const { data: total } = useGetTotalTracks();
 
   const { refetch } = useQuery(
@@ -90,12 +93,13 @@ export function useGetSavedTracks(onProgress: (progress: number) => void) {
         setOffset(
           offset + PAGE_LIMIT > (total || Infinity) ? -1 : offset + PAGE_LIMIT
         );
-        onProgress(total ? (data.offset / total) * 100 : 0);
+        updateProgress(total ? (data.offset / total) * 100 : 0);
       },
       enabled: offset > 0,
     }
   );
 
+  // TODO: rely on status rather than offset=== -1
   useEffect(() => {
     setIsTracksReady(offset === -1);
   }, [setIsTracksReady, offset]);
@@ -112,6 +116,8 @@ export const useGetMetadata = (onProgress: (progress: number) => void) => {
 
   const { rawTracks, isTracksReady, artists, setArtists, setIsArtistsReady } =
     useContext(TracksContext);
+
+  const updateProgress = useUpdateProgress(onProgress);
 
   const [index, setIndex] = useState<number>(0);
   const artistsIds = uniq(
@@ -133,15 +139,19 @@ export const useGetMetadata = (onProgress: (progress: number) => void) => {
           return index < artistsIdsChunks.length - 1 ? index + 1 : -1;
         });
         setArtists([...artists, ...(data.artists || [])]);
-        onProgress(index ? (index + 1 / artistsIdsChunks.length) * 100 : 0);
+
+        updateProgress(
+          index ? ((index + 1) / artistsIdsChunks.length) * 100 : 0
+        );
       },
       enabled: index >= 0 && !isEmpty(artistsIds) && isTracksReady,
     }
   );
 
+  // TODO: rely on status rather than index=== -1
   useEffect(() => {
-    setIsArtistsReady(index === artistsIdsChunks.length - 1 || index === -1);
-  }, [setIsArtistsReady, index, artistsIdsChunks.length, artistsIdsChunks]);
+    setIsArtistsReady(index === artistsIdsChunks.length || index === -1);
+  }, [setIsArtistsReady, index, artistsIdsChunks.length]);
 };
 
 export const useGetClusterDistances = (
@@ -155,29 +165,38 @@ export const useGetClusterDistances = (
     setIsDistancesReady,
   } = useContext(TracksContext);
 
-  const [progress, setProgress] = useState(0);
+  const updateProgress = useUpdateProgress(onProgress);
 
   useEffect(() => {
     if (isEmpty(tracks)) return;
     if (!isTracksReady || !isArtistsReady) return;
 
-    const genres = getTrackGenres(tracks);
-    setProgress(50);
-    const distances = getDistances(genres);
-    setDistances(distances);
-    setIsDistancesReady(true);
-    setProgress(100);
+    updateProgress(10);
+
+    const calculateGenres = async () => {
+      const genres = await getTrackGenres(tracks);
+      updateProgress(50);
+      return genres;
+    };
+    const calculateDistances = async (genres: string[][]) => {
+      const distances = getDistances(genres);
+      setDistances(distances);
+      updateProgress(100);
+    };
+
+    calculateGenres()
+      .then((genres) => calculateDistances(genres))
+      .then(() => {
+        setIsDistancesReady(true);
+      });
   }, [
+    updateProgress,
     tracks,
     isArtistsReady,
     isTracksReady,
     setDistances,
     setIsDistancesReady,
   ]);
-
-  useEffect(() => {
-    onProgress(progress);
-  }, [progress, onProgress]);
 };
 
 export const useGetClusters = (onProgress: (progress: number) => void) => {
@@ -192,16 +211,7 @@ export const useGetClusters = (onProgress: (progress: number) => void) => {
     isDistancesReady,
   } = useContext(TracksContext);
 
-  const onProgressRef = useRef(onProgress);
-
-  useEffect(() => {
-    onProgressRef.current = onProgress;
-  }, [onProgress]);
-
-  const updateProgress = useCallback(async (progress: number) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    onProgressRef.current(progress);
-  }, []);
+  const updateProgress = useUpdateProgress(onProgress);
 
   useEffect(() => {
     if (isEmpty(tracks)) return;

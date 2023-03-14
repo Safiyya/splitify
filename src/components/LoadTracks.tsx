@@ -1,4 +1,4 @@
-import { Badge, Button, Progress } from "@chakra-ui/react";
+import { Badge, Button } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 
 import {
@@ -11,16 +11,17 @@ import {
 import TracksContext from "@/TracksContext";
 
 import Playlists from "./Playlists";
+import ProgressBar from "./ProgressBar";
 
 interface LoadTracksProps {}
 
 const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
   const { clusters, reset } = useContext(TracksContext);
 
-  const [loadTracksProgress, setLoadTracksProgress] = useState<number>();
-  const [loadMetadataProgress, setLoadMetadataProgress] = useState<number>();
-  const [loadClustersProgress, setLoadClustersProgress] = useState<number>();
-  const [loadDistancesProgress, setLoadDistancesProgress] = useState<number>();
+  const [loadTracksProgress, setLoadTracksProgress] = useState<number>(0);
+  const [loadMetadataProgress, setLoadMetadataProgress] = useState<number>(0);
+  const [loadClustersProgress, setLoadClustersProgress] = useState<number>(0);
+  const [loadDistancesProgress, setLoadDistancesProgress] = useState<number>(0);
 
   const onLoadTracksProgress = (progress: number) => {
     setLoadTracksProgress(progress);
@@ -47,15 +48,12 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
   } = useGetTotalTracks();
 
   const loadTracks = async () => {
-    await getSavedTracks();
-  };
-
-  const resetTracks = () => {
     reset();
     onLoadTracksProgress(0);
     onLoadMetadataProgress(0);
     onLoadClustersProgress(0);
     onLoadDistancesProgress(0);
+    await getSavedTracks();
   };
 
   if (isLoadingTotalTracks) return null;
@@ -63,17 +61,24 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
   return (
     <>
       <Button onClick={loadTracks}>Load {total} tracks</Button>
-      <Button variant="outline" onClick={resetTracks}>
-        Start again
-      </Button>
-      Loading tracks
-      <Progress value={loadTracksProgress} />
-      Loading metadata
-      <Progress value={loadMetadataProgress} />
-      Prepare
-      <Progress value={loadDistancesProgress} />
-      Loading clusters
-      <Progress value={loadClustersProgress} />
+
+      <ProgressBar
+        my={2}
+        title="Loading tracks"
+        progress={loadTracksProgress}
+      />
+      <ProgressBar
+        my={2}
+        title="Loading metadata"
+        progress={loadMetadataProgress}
+      />
+      <ProgressBar my={2} title="Prepare" progress={loadDistancesProgress} />
+      <ProgressBar
+        my={2}
+        title="Loading clusters"
+        progress={loadClustersProgress}
+      />
+
       {clusters ? <Playlists clusters={clusters} /> : null}
     </>
   );
