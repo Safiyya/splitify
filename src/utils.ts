@@ -40,11 +40,17 @@ export const getDistances = (trackGenres: string[][]) => {
   return distances;
 };
 
-export const getClusters = (
+export const getClusters = async (
   tracks: Track[],
-  distances: Map<number, number>
+  distances: Map<number, number>,
+  onProgress: (progress: number) => Promise<void>
 ) => {
-  const clusters = hierarchicalClustering(distances, tracks, MIN_DISTANCE);
+  const clusters = await hierarchicalClustering(
+    distances,
+    tracks,
+    MIN_DISTANCE,
+    onProgress
+  );
 
   const augmentedClusters = clusters.map((cluster, index) => ({
     index,
@@ -82,17 +88,21 @@ function jaccardDistance(set1: string[], set2: string[]): number {
   return intersection.size / union.size;
 }
 
-function hierarchicalClustering(
+async function hierarchicalClustering(
   distances: Map<number, number>,
   objects: Track[],
-  thresholdDistance: number
-): Track[][] {
+  thresholdDistance: number,
+  onProgress: (progress: number) => Promise<void>
+): Promise<Track[][]> {
   const clusters = objects.map((obj) => [obj]);
 
   const memoizedDistances = new Array(clusters.length);
   for (let i = 0; i < clusters.length; i++) {
     memoizedDistances[i] = new Array(clusters.length);
   }
+
+  const numIterations = clusters.length - 1;
+  let completedIterations = 0;
 
   while (true) {
     let minDistance = Infinity;
@@ -113,6 +123,7 @@ function hierarchicalClustering(
     }
 
     if (minDistance >= thresholdDistance) {
+      await onProgress(100);
       break;
     }
 
@@ -126,6 +137,11 @@ function hierarchicalClustering(
     for (let i = 0; i < memoizedDistances.length; i++) {
       memoizedDistances[i].splice(closestClusters[1], 1);
     }
+
+    completedIterations++;
+    const progress = (completedIterations / numIterations) * 100;
+    console.log("# progress", { progress });
+    await onProgress(progress);
   }
 
   return clusters;

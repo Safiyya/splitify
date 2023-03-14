@@ -1,7 +1,7 @@
 import { chunk, compact, isEmpty, uniq } from "lodash";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 
 import TracksContext from "@/TracksContext";
@@ -11,14 +11,14 @@ import { getClusters, getDistances, getTrackGenres } from "@/utils";
 const PAGE_LIMIT = 50;
 
 export function useGetTotalTracks() {
-  // return useQuery<number, Error>(
-  //   "totalTracks",
-  //   () => fetch("/api/tracks/total").then((res) => res.json()),
-  //   {
-  //     enabled: true,
-  //   }
-  // );
-  return { isLoading: false, error: null, data: 100 };
+  return useQuery<number, Error>(
+    "totalTracks",
+    () => fetch("/api/tracks/total").then((res) => res.json()),
+    {
+      enabled: true,
+    }
+  );
+  // return { isLoading: false, error: null, data: 100 };
 }
 
 const fetchTracks = async (session: Session, offset: number) => {
@@ -154,12 +154,19 @@ export const useGetClusters = (onProgress: (progress: number) => void) => {
     isReady,
   } = useContext(TracksContext);
 
+  const onProgressRef = useRef(onProgress);
+
+  useEffect(() => {
+    onProgressRef.current = onProgress;
+  }, [onProgress]);
+
   const updateProgress = useCallback(
     async (progress: number) => {
-      await new Promise((resolve) => setTimeout(resolve, 400));
-      onProgress(progress);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      console.log({ isReady, progress });
+      onProgressRef.current(progress);
     },
-    [onProgress]
+    [isReady]
   );
 
   useEffect(() => {
@@ -172,20 +179,21 @@ export const useGetClusters = (onProgress: (progress: number) => void) => {
       await updateProgress(33);
       const distances = getDistances(genres);
       await updateProgress(66);
-      const clusters = getClusters(tracks, distances);
+      const clusters = await getClusters(tracks, distances, updateProgress);
       await updateProgress(100);
       setClusters(clusters);
-      setIsReady(true);
     };
 
-    calculateClusters();
+    calculateClusters().then(() => {
+      setIsReady(true);
+    });
   }, [
     tracks,
     isArtistsReady,
     isTracksReady,
     setClusters,
-    updateProgress,
     isReady,
+    updateProgress,
     setIsReady,
   ]);
 };
