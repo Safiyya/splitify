@@ -1,7 +1,7 @@
 import { countBy, fromPairs, orderBy, pick, sortBy, toPairs } from "lodash";
 
-import { MIN_DISTANCE } from "./constants";
-import { Track } from "./types";
+import { MIN_DISTANCE } from "../../constants";
+import { Track } from "../../types";
 
 const genresKey = (genres: string[]) => genres.sort().join("|");
 

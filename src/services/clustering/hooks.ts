@@ -5,14 +5,18 @@ import { useQuery } from "react-query";
 
 import { useUpdateProgress } from "@/components/hooks";
 import { PAGE_LIMIT } from "@/constants";
+import {
+  getClusters,
+  getDistances,
+  getTrackGenres,
+} from "@/services/clustering/utils";
 import TracksContext from "@/TracksContext";
 import { Artist, RawTrack } from "@/types";
-import { getClusters, getDistances, getTrackGenres } from "@/utils";
 
-import { fetchArtists } from "./api/artists";
-import { fetchTracks, useGetTotalTracks } from "./api/tracks";
+import { fetchArtists } from "../api/artists";
+import { fetchTracks, useGetTotalTracks } from "../api/tracks";
 
-export function useGetSavedTracks(onProgress: (progress: number) => void) {
+export function useGetSavedTracks(onProgress: (_progress: number) => void) {
   const { data: session } = useSession();
   const { rawTracks, setRawTracks, setIsTracksReady } =
     useContext(TracksContext);
@@ -52,7 +56,7 @@ export function useGetSavedTracks(onProgress: (progress: number) => void) {
   return refetch;
 }
 
-export const useGetMetadata = (onProgress: (progress: number) => void) => {
+export const useGetMetadata = (onProgress: (_progress: number) => void) => {
   const { data: session } = useSession();
 
   if (!session) {
@@ -100,7 +104,7 @@ export const useGetMetadata = (onProgress: (progress: number) => void) => {
 };
 
 export const useGetClusterDistances = (
-  onProgress: (progress: number) => void
+  onProgress: (_progress: number) => void
 ) => {
   const {
     tracks,
@@ -144,7 +148,7 @@ export const useGetClusterDistances = (
   ]);
 };
 
-export const useGetClusters = (onProgress: (progress: number) => void) => {
+export const useGetClusters = (onProgress: (_progress: number) => void) => {
   const {
     tracks,
     isTracksReady,

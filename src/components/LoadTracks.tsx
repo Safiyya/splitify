@@ -7,7 +7,7 @@ import {
   useGetClusters,
   useGetMetadata,
   useGetSavedTracks,
-} from "@/services/clustering";
+} from "@/services/clustering/hooks";
 import TracksContext from "@/TracksContext";
 
 import Playlists from "./Playlists";
@@ -75,7 +75,7 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
       <ProgressBar my={2} title="Prepare" progress={loadDistancesProgress} />
       <ProgressBar
         my={2}
-        title="Loading clusters"
+        title="Generating preview"
         progress={loadClustersProgress}
       />
 
