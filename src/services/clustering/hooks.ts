@@ -21,6 +21,7 @@ export function useGetSavedTracks(onProgress: (_progress: number) => void) {
   const { rawTracks, setRawTracks, setIsTracksReady } =
     useContext(TracksContext);
   const [offset, setOffset] = useState<number>(0);
+  const [next, setNext] = useState<string>();
 
   if (!session) {
     throw Error("No session available");
@@ -37,21 +38,26 @@ export function useGetSavedTracks(onProgress: (_progress: number) => void) {
       keepPreviousData: true,
       refetchOnWindowFocus: false,
       notifyOnChangeProps: ["isLoading", "data"],
-      onSuccess: (data: { offset: number; items: RawTrack[] }) => {
-        setRawTracks([...rawTracks, ...data.items]);
-        setOffset(
-          offset + PAGE_LIMIT > (total || Infinity) ? -1 : offset + PAGE_LIMIT
-        );
+      onSuccess: (data: {
+        offset: number;
+        items: RawTrack[];
+        next: string;
+      }) => {
+        setRawTracks(compact([...rawTracks, ...data.items]));
+        setNext(data.next);
+        setOffset(offset + PAGE_LIMIT);
         updateProgress(total ? (data.offset / total) * 100 : 0);
+        if (!data.next) {
+          setOffset(0);
+        }
       },
-      enabled: offset > 0,
+      enabled: offset > 0 && !!next,
     }
   );
 
-  // TODO: rely on status rather than offset=== -1
   useEffect(() => {
-    setIsTracksReady(offset === -1);
-  }, [setIsTracksReady, offset]);
+    setIsTracksReady(!next);
+  }, [setIsTracksReady, next]);
 
   return refetch;
 }
@@ -69,12 +75,14 @@ export const useGetMetadata = (onProgress: (_progress: number) => void) => {
   const updateProgress = useUpdateProgress(onProgress);
 
   const [index, setIndex] = useState<number>(0);
+  const [next, setNext] = useState<boolean>(true);
   const artistsIds = uniq(
     compact(rawTracks)
       .map((t) => t.artists.map((a) => a?.id))
       .flat()
   );
   const artistsIdsChunks = chunk(artistsIds, 50);
+  const N = artistsIdsChunks.length;
 
   useQuery(
     ["artists", artistsIdsChunks[index]],
@@ -84,23 +92,22 @@ export const useGetMetadata = (onProgress: (_progress: number) => void) => {
       refetchOnWindowFocus: false,
       notifyOnChangeProps: ["isLoading", "data"],
       onSuccess: (data: { artists: Artist[] }) => {
-        setIndex((index) => {
-          return index < artistsIdsChunks.length - 1 ? index + 1 : -1;
-        });
-        setArtists([...artists, ...(data.artists || [])]);
+        setIndex(index + 1);
+        setNext(!artistsIdsChunks[index] ? false : true);
+        setArtists(compact([...artists, ...(data.artists || [])]));
 
-        updateProgress(
-          index ? ((index + 1) / artistsIdsChunks.length) * 100 : 0
-        );
+        updateProgress(index ? (index / N) * 100 : 0);
+        if (!next) {
+          setIndex(0);
+        }
       },
-      enabled: index >= 0 && !isEmpty(artistsIds) && isTracksReady,
+      enabled: index >= 0 && !isEmpty(artistsIds) && !!next && isTracksReady,
     }
   );
 
-  // TODO: rely on status rather than index=== -1
   useEffect(() => {
-    setIsArtistsReady(index === artistsIdsChunks.length || index === -1);
-  }, [setIsArtistsReady, index, artistsIdsChunks.length]);
+    setIsArtistsReady(index === N);
+  }, [setIsArtistsReady, index, N]);
 };
 
 export const useGetClusterDistances = (

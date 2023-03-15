@@ -1,5 +1,5 @@
 import { Badge, Button } from "@chakra-ui/react";
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 
 import { useGetTotalTracks } from "@/services/api/tracks";
 import {
@@ -47,14 +47,14 @@ const LoadTracks: React.FunctionComponent<LoadTracksProps> = () => {
     data: total,
   } = useGetTotalTracks();
 
-  const loadTracks = async () => {
+  const loadTracks = useCallback(async () => {
     reset();
     onLoadTracksProgress(0);
     onLoadMetadataProgress(0);
     onLoadClustersProgress(0);
     onLoadDistancesProgress(0);
     await getSavedTracks();
-  };
+  }, [getSavedTracks, reset]);
 
   if (isLoadingTotalTracks) return null;
   if (errorTotalTracks) return <Badge>Error loading tracks</Badge>;

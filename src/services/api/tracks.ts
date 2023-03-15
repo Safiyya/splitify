@@ -1,4 +1,5 @@
 import { Session } from "next-auth";
+import { useQuery } from "react-query";
 
 import { RawTrack } from "@/types";
 
@@ -20,6 +21,7 @@ export const fetchTracks = async (session: Session, offset: number) => {
     return {
       offset: (data.offset + PAGE_LIMIT) as number,
       items: data.items.map((i: any) => i.track) as RawTrack[],
+      next: data.next as string,
     };
   } else {
     throw Error("Cannot retrieve tracks");
@@ -27,12 +29,12 @@ export const fetchTracks = async (session: Session, offset: number) => {
 };
 
 export const useGetTotalTracks = () => {
-  // return useQuery<number, Error>(
-  //   "totalTracks",
-  //   () => fetch("/api/tracks/total").then((res) => res.json()),
-  //   {
-  //     enabled: true,
-  //   }
-  // );
-  return { isLoading: false, error: null, data: 500 };
+  return useQuery<number, Error>(
+    "totalTracks",
+    () => fetch("/api/tracks/total").then((res) => res.json()),
+    {
+      enabled: true,
+    }
+  );
+  // return { isLoading: false, error: null, data: 500 };
 };
